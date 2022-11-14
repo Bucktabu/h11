@@ -1,7 +1,7 @@
 import {givePagesCount} from "./helperFunctions";
 import {BlogsType} from "./types/blogs-type";
 import {PostsType} from "./types/posts-type";
-import {UsersType} from "./types/user-type";
+import {UsersType} from "./types/user";
 import {CommentsType} from "./types/comment-type";
 
 export const paginationContentPage = (pageNumber: string,

@@ -1,11 +1,11 @@
 import {Request, Response, NextFunction} from "express";
-import {UserDBType} from "../../types/user-type";
+import {UserDB} from "../../types/user";
 import {usersRepository} from "../../repositories/users-repository";
 import bcrypt from "bcrypt";
 
 export const checkCredential = async (req: Request, res: Response, next: NextFunction) => {
 
-    const user: UserDBType | null = await usersRepository.giveUserByLoginOrEmail(req.body.login)
+    const user: UserDB | null = await usersRepository.giveUserByLoginOrEmail(req.body.login)
 
     if (!user) {
         return res.sendStatus(401)

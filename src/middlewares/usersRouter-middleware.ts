@@ -12,5 +12,5 @@ import {pageNumberValidation,
         sortDirectionValidation} from "./validation-middleware/query-validation";
 
 export const deleteUsersRouter = [authenticationGuard]
-export const getUsersRouterMiddleware = [sortByValidation, sortDirectionValidation, pageNumberValidation, pageSizeValidation, searchEmailTermValidation, searchLoginTermValidation, inputValidation]
+export const getUsersRouterMiddleware = [sortByValidation, sortDirectionValidation, pageNumberValidation, pageSizeValidation, searchEmailTermValidation,searchLoginTermValidation, inputValidation]
 export const postUsersRouterMiddleware = [authenticationGuard, userLoginValidation, userPasswordValidation, userEmailValidation, inputValidation]

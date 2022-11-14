@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import {UsersRepository} from "../repositories/users-repository";
-import {UserDBType, UserType} from "../types/user-type";
+import {UserDB, User} from "../types/user";
 import {ContentPageType} from "../types/content-page-type";
 import {paginationContentPage} from "../paginationContentPage";
 import {_generateHash} from "../helperFunctions";
@@ -13,16 +13,16 @@ export class UsersService {
         this.userRepository = new UsersRepository()
     }
 
-    async aboutMe(user: UserDBType): Promise<AboutMeType> {
+    async aboutMe(user: UserDB): Promise<AboutMeType> {
         return userDBtoUser(user)
     }
 
-    async createNewUser(login: string, password: string, email: string): Promise<UserType | null> {
+    async createNewUser(login: string, password: string, email: string): Promise<User | null> {
 
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await _generateHash(password, passwordSalt)
 
-        const createNewUser: UserDBType = {
+        const createNewUser: UserDB = {
             id: String(+new Date()),
             login,
             email,
@@ -40,7 +40,7 @@ export class UsersService {
         return usersOutputType(createdNewUser)
     }
 
-    async giveUserById(id: string): Promise<UserDBType | null> {
+    async giveUserById(id: string): Promise<UserDB | null> {
         return this.userRepository.giveUserById(id)
     }
 

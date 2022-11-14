@@ -57,10 +57,10 @@ class UserController {
 const userControllerInstance = new UserController()
 
 usersRouter.post('/',
-    postUsersRouterMiddleware, userControllerInstance.createUser.bind(userControllerInstance))
+    ...postUsersRouterMiddleware, userControllerInstance.createUser.bind(userControllerInstance))
 
 usersRouter.get('/',
     ...getUsersRouterMiddleware, userControllerInstance.getUsersPage.bind(userControllerInstance)) // TODO ???
 
 usersRouter.delete('/:id',
-    deleteUsersRouter, userControllerInstance.deleteUserById.bind(userControllerInstance))
+    ...deleteUsersRouter, userControllerInstance.deleteUserById.bind(userControllerInstance))

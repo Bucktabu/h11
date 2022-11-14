@@ -1,7 +1,7 @@
 import {BlogsType} from "./blogs-type";
 import {CommentsType} from "./comment-type";
 import {PostsType} from "./posts-type";
-import {UsersType} from "./user-type";
+import {UsersType} from "./user";
 
 export class ContentPageType {
     constructor(

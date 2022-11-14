@@ -8,7 +8,7 @@ import {DeviceSecurityType} from "../types/deviceSecurity-type";
 import {EmailConfirmationType} from "../types/email-confirmation-type";
 import {PostType} from "../types/posts-type";
 import {TokenType} from "../types/token-type";
-import {UserDBType} from "../types/user-type";
+import {UserDB} from "../types/user";
 import {UserIpAddressType} from "../types/UserIpAddress";
 ///?maxPoolSize=20&w=majority
 const mongoUri = process.env.MONGO_URI || 'mongodb://0.0.0.0:27017'

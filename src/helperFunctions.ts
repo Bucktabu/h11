@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import {UserDBType} from "./types/user-type";
+import {UserDB} from "./types/user";
 import {jwsService} from "./application/jws-service";
 
 export const giveSkipNumber = (pageNumber: string,

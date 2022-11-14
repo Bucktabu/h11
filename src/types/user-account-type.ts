@@ -1,9 +1,9 @@
 import {EmailConfirmationType} from "./email-confirmation-type";
-import {UserDBType} from "./user-type";
+import {UserDB} from "./user";
 
 export class UserAccountType {
     constructor(
-        public accountData: UserDBType,
+        public accountData: UserDB,
         public emailConfirmation: EmailConfirmationType
     ) {}
 }

@@ -1,13 +1,13 @@
 import {commentsRepository} from "../repositories/comments-repository";
 import {CommentType} from "../types/comment-type";
-import {UserDBType} from "../types/user-type";
+import {UserDB} from "../types/user";
 import {ContentPageType} from "../types/content-page-type";
 
 import {paginationContentPage} from "../paginationContentPage";
 import {commentOutputType} from "../dataMapping/toCommentOutputType";
 
 class CommentsService {
-    async createNewComment(postId: string, comment: string, user: UserDBType): Promise<CommentType | null> {
+    async createNewComment(postId: string, comment: string, user: UserDB): Promise<CommentType | null> {
         const newComment = {
             id: String(+new Date()),
             content: comment,
