@@ -1,3 +1,6 @@
+import {LikesModel} from "../models/likes-model";
+import {LikesInfoConstructor} from "./likesInfo-constructor";
+
 export class CommentConstructor {
     constructor(
         public id: string,
@@ -17,6 +20,7 @@ export class CommentBDConstructor {
         public userId: string,
         public userLogin: string,
         public createdAt: string,
+        public likesInfo: LikesInfoConstructor,
         public postId: string
     ) {}
 }

@@ -1,8 +1,8 @@
 import {CommentsRepository} from "../repositories/comments-repository";
 import {CommentBDConstructor, CommentConstructor} from "../types/comment-constructor";
-import {UserDBConstructor} from "../types/user-constructor";
 import {ContentPageConstructor} from "../types/contentPage-constructor";
-
+import {LikesInfoConstructor} from "../types/likesInfo-constructor";
+import {UserDBConstructor} from "../types/user-constructor";
 import {paginationContentPage} from "../paginationContentPage";
 import {commentOutputType} from "../dataMapping/toCommentOutputType";
 
@@ -10,12 +10,19 @@ export class CommentsService {
     constructor(protected commentsRepository: CommentsRepository) {}
 
     async createNewComment(postId: string, comment: string, user: UserDBConstructor): Promise<CommentConstructor | null> {
+        const likesInfo = new LikesInfoConstructor(
+            'None',
+            [],
+            []
+        )
+
         const newComment = new CommentBDConstructor(
             String(+new Date()),
             comment,
             user.id,
             user.login,
             new Date().toISOString(),
+            likesInfo,
             postId
         )
 

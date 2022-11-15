@@ -3,6 +3,10 @@ import {URIParameters} from "../models/URIParameters";
 import {Response} from "express";
 import {CommentConstructor} from "../types/comment-constructor";
 import {CommentsService} from "../domain/comments-servise";
+import {commentsService} from "../composition-root";
+import {LikesModel} from "../models/likes-model";
+import {LikeStatusConstructor} from "../types/likeStatus-constructor";
+import {SortParameters} from "../models/sortParameters";
 
 export class CommentsController {
     constructor(protected commentsService: CommentsService) {}
@@ -29,6 +33,24 @@ export class CommentsController {
         const comment = await this.commentsService.giveCommentById(req.params.id)
 
         return res.status(204).send(comment!)
+    }
+
+    async updateLikeStatus(req: RequestWithParamsAndBody<URIParameters, LikeStatusConstructor>, res: Response) {
+        const likeStatus = Object.values(LikesModel)
+
+        if (!likeStatus.includes(req.body.likeStatus as LikesModel)) { // TODO ??? Просто принудительно типизировал
+            return res.sendStatus(400)
+        }
+
+        const comment = await this.commentsService.giveCommentById(req.params.id)
+
+        if (!comment) {
+            res.sendStatus(404)
+        }
+        // Посмотреть, когда мы запрашиваем комменты авторизированным пользователем, по дефолту
+        // должно возвращаться 'None'. Для авторизированного пользователя нужно добавить массив,
+        // в котором мы будем хранить все лайкнутые или дизлайкнутые айдишники комментов.
+        // TODO
     }
 
     async deleteCommentByCommentId(req: RequestWithParams<URIParameters>,
