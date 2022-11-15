@@ -1,12 +1,15 @@
-import {postsRepository} from "../repositories/posts-repository";
-import {blogsRepository} from "../repositories/blogs-repository";
+import {PostsRepository} from "../repositories/posts-repository";
+import {BlogsRepository} from "../repositories/blogs-repository";
 import {PostConstructor} from "../types/posts-constructor";
 import {ContentPageConstructor} from "../types/contentPage-constructor";
 
 import {paginationContentPage} from "../paginationContentPage";
 import {postOutputType} from "../dataMapping/toPostOutputType";
 
-class PostsService {
+export class PostsService {
+    constructor(protected postsRepository: PostsRepository,
+                protected blogsRepository: BlogsRepository) {}
+
     async createNewPost(title: string,
                         shortDescription: string,
                         content: string,
@@ -22,7 +25,7 @@ class PostsService {
             new Date().toISOString()
         )
 
-        const createdNewPost = await postsRepository.createNewPost(newPost)
+        const createdNewPost = await this.postsRepository.createNewPost(newPost)
 
         if (!createdNewPost) {
             return null
@@ -32,7 +35,7 @@ class PostsService {
     }
 
     async giveBlogName(id: string): Promise<string> {
-        const blog = await blogsRepository.giveBlogById(id)
+        const blog = await this.blogsRepository.giveBlogById(id)
 
         if (!blog) {
             return ''
@@ -47,14 +50,14 @@ class PostsService {
                         pageSize: string,
                         blogId?: string): Promise<ContentPageConstructor> {
 
-        const content = await postsRepository.givePosts(sortBy, sortDirection, pageNumber, pageSize, blogId)
-        const totalCount = await postsRepository.giveTotalCount(blogId)
+        const content = await this.postsRepository.givePosts(sortBy, sortDirection, pageNumber, pageSize, blogId)
+        const totalCount = await this.postsRepository.giveTotalCount(blogId)
 
         return paginationContentPage(pageNumber, pageSize, content, totalCount)
     }
 
     async givePostById(postId: string): Promise<PostConstructor | null> {
-        return await postsRepository.givePostById(postId)
+        return await this.postsRepository.givePostById(postId)
     }
 
     async updatePost(id: string,
@@ -63,12 +66,10 @@ class PostsService {
                      content: string,
                      blogId: string): Promise<boolean> {
 
-        return await postsRepository.updatePost(id, title, shortDescription, content, blogId)
+        return await this.postsRepository.updatePost(id, title, shortDescription, content, blogId)
     }
 
     async deletePostById(id: string): Promise<boolean> {
-        return await postsRepository.deletePostById(id)
+        return await this.postsRepository.deletePostById(id)
     }
 }
-
-export const postsService = new PostsService()

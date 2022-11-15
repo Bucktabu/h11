@@ -2,7 +2,7 @@ import {BlogSchema} from "../schemes/blog-scheme";
 import {BlogsConstructor, BlogConstructor} from "../types/blogs-constructor";
 import {giveSkipNumber} from "../helperFunctions";
 
-class BlogsRepository {
+export class BlogsRepository {
     async createNewBlog(newBlog: BlogConstructor): Promise<BlogConstructor | null> {
         try {
             await BlogSchema.create(newBlog)
@@ -56,5 +56,3 @@ class BlogsRepository {
         }
     }
 }
-
-export const blogsRepository = new BlogsRepository()

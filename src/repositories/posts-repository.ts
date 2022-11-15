@@ -2,7 +2,7 @@ import {PostsScheme} from "../schemes/posts-scheme";
 import {PostsConstructor, PostConstructor} from "../types/posts-constructor";
 import {giveSkipNumber} from "../helperFunctions";
 
-class PostsRepository {
+export class PostsRepository {
     async createNewPost(newPost: PostConstructor): Promise<PostConstructor | null> {
         try {
             await PostsScheme.create(newPost)
@@ -56,5 +56,3 @@ class PostsRepository {
         }
     }
 }
-
-export const postsRepository = new PostsRepository()

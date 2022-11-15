@@ -1,6 +1,6 @@
 import {TokenBlackListScheme} from "../schemes/tokenBlackList-scheme";
 
-class JWTBlackList {
+export class JWTBlackList {
     async addTokenInBlackList(refreshToken: string) {
         return TokenBlackListScheme.create({refreshToken})
     }

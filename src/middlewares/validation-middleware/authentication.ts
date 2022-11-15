@@ -1,7 +1,6 @@
 import {NextFunction, Request, Response} from "express";
+import {jwtService, usersService} from "../../composition-root";
 
-import {jwsService} from "../../application/jws-service";
-import {usersService} from "../../domain/users-service";
 
 export const authentication = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -11,13 +10,13 @@ export const authentication = async (req: Request, res: Response, next: NextFunc
 
     const accessToken = req.headers.authorization.split(' ')[1]
 
-    const userInfo = await jwsService.giveTokenPayload(accessToken)
+    const userInfo = await jwtService.giveTokenPayload(accessToken)
 
     if (!userInfo) {
         return res.sendStatus(401)
     }
 
-    const user: any = await usersService.giveUserById(userInfo.userId)
+    const user: any = await usersService.giveUserByIdOrLoginOrEmail(userInfo.userId)
 
     if (!user) {
         return res.sendStatus(401)

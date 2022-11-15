@@ -1,7 +1,7 @@
 import {SecurityScheme} from "../schemes/security-scheme";
 import {DeviceSecurityConstructor} from "../types/deviceSecurity-constructor";
 
-class SecurityRepository {
+export class SecurityRepository {
     async createUserDevice(createDevice: DeviceSecurityConstructor) {
         try {
             return SecurityScheme.create(createDevice)
@@ -68,5 +68,3 @@ class SecurityRepository {
         }
     }
 }
-
-export const securityRepository = new SecurityRepository()

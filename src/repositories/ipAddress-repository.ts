@@ -1,6 +1,6 @@
 import {IpAddressScheme} from "../schemes/ipAddress-scheme";
 
-class IpAddressRepository {
+export class IpAddressRepository {
     async createNewConnection(ip: string, endpoint: string, connectionAt: number) {
         return IpAddressScheme.create({ipAddress: ip, endpoint, connectionAt})
     }

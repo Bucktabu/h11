@@ -1,8 +1,10 @@
 import jwt from 'jsonwebtoken'
 import {settings} from "../settings";
-import {jwtBlackList} from "../repositories/jwtBlackList";
+import {JWTBlackList} from "../repositories/jwtBlackList";
 
-class JWTService {
+export class JWTService {
+    constructor(protected jwtBlackList: JWTBlackList) {}
+
     async createJWT(userId: string, deviceId: string, timeToExpired: number) {
         return jwt.sign({userId, deviceId}, settings.JWT_SECRET, {expiresIn: `${timeToExpired}s`})
     }
@@ -17,12 +19,17 @@ class JWTService {
     }
 
     async addTokenInBlackList(refreshToken: string) {
-        return await jwtBlackList.addTokenInBlackList(refreshToken)
+        return await this.jwtBlackList.addTokenInBlackList(refreshToken)
     }
 
     async checkTokenInBlackList(refreshToken: string) {
-        return await jwtBlackList.giveToken(refreshToken)
+        return await this.jwtBlackList.giveToken(refreshToken)
+    }
+
+    async createToken(userId: string, deviceId: string) {
+        const accessToken = await this.createJWT(userId, deviceId, 5 * 60 * 1000)
+        const refreshToken = await this.createJWT(userId, deviceId, 10 * 60 * 1000)
+
+        return {accessToken, refreshToken}
     }
 }
-
-export const jwsService = new JWTService()

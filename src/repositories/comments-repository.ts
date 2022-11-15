@@ -2,7 +2,7 @@ import {CommentsSchema} from "../schemes/comments-scheme";
 import {CommentBDConstructor, CommentsType, CommentConstructor} from "../types/comment-constructor";
 import {giveSkipNumber} from "../helperFunctions";
 
-class CommentsRepository {
+export class CommentsRepository {
     async createNewComment(newComment: CommentBDConstructor): Promise<CommentBDConstructor | null> {
         try {
             await CommentsSchema.create(newComment)
@@ -62,5 +62,3 @@ class CommentsRepository {
         }
     }
 }
-
-export const commentsRepository = new CommentsRepository()

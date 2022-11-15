@@ -2,14 +2,16 @@ import bcrypt from "bcrypt";
 import add from "date-fns/add";
 import {v4 as uuidv4} from 'uuid';
 import {emailConfirmationRepository} from "../repositories/emailConfirmation-repository";
-import {usersRepository} from "../repositories/users-repository";
+import {UsersRepository} from "../repositories/users-repository";
 import {emailsManager} from "../managers/email-manager";
 import {UserAccountConstructor} from "../types/userAccount-constructor";
 import {_generateHash} from "../helperFunctions";
 import {UserDBConstructor} from "../types/user-constructor";
 import {EmailConfirmationConstructor} from "../types/emailConfirmation-constructor";
 
-class AuthService {
+export class AuthService {
+    constructor(protected usersRepository: UsersRepository) {}
+
     async createUser(login: string, password: string, email: string) {
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await _generateHash(password, passwordSalt)
@@ -55,7 +57,7 @@ class AuthService {
     }
 
     async resendConfirmRegistration(email: string) {
-        const user = await usersRepository.giveUserByLoginOrEmail(email)
+        const user = await this.usersRepository.giveUserByIdOrLoginOrEmail(email)
 
         if (!user) {
             return null
@@ -75,7 +77,7 @@ class AuthService {
     }
 
     async createUserAccount(userAccount: UserAccountConstructor) {
-        const user = await usersRepository.createNewUser(userAccount.accountData)
+        const user = await this.usersRepository.createNewUser(userAccount.accountData)
         const emailConfirmation = await emailConfirmationRepository.createEmailConfirmation(userAccount.emailConfirmation)
 
         if (!user || !emailConfirmation) {
@@ -103,5 +105,3 @@ class AuthService {
         return emailConfirmation
     }
 }
-
-export const authService = new AuthService()

@@ -1,6 +1,5 @@
 import {body} from "express-validator";
-import {usersRepository} from "../../repositories/users-repository";
-import {emailConfirmationRepository} from "../../repositories/emailConfirmation-repository";
+import {emailConfirmationRepository, usersRepository} from "../../composition-root";
 
 export const emailConfirmedValidation = body('email').isString().trim().isEmail()
     .custom(async (email: string) => {

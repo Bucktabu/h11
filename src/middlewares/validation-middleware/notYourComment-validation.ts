@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {commentsService} from "../../domain/comments-servise";
+import {commentsService} from "../../composition-root";
 
 export const notYourComment = async (req: Request, res: Response, next: NextFunction) => {
     const comment = await commentsService.giveCommentById(req.params.id)

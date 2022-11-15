@@ -1,5 +1,5 @@
 import {body} from "express-validator";
-import {blogsRepository} from "../../repositories/blogs-repository";
+import {blogsRepository} from "../../composition-root";
 
 export const titleValidation = body('title').isString().trim().isLength({min: 3, max: 30})
 export const shortDescriptionValidation = body('shortDescription').isString().trim().isLength({min: 3, max: 100})

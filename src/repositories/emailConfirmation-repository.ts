@@ -1,7 +1,7 @@
 import {EmailConfirmationScheme} from "../schemes/emailConfirm-scheme";
 import {EmailConfirmationConstructor} from "../types/emailConfirmation-constructor";
 
-class EmailConfirmationRepository {
+export class EmailConfirmationRepository {
     async createEmailConfirmation(emailConfirmation: EmailConfirmationConstructor) {
         try {
             await EmailConfirmationScheme.create(emailConfirmation)

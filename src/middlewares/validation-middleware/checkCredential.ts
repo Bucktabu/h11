@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from "express";
-import {UserDBConstructor} from "../../types/user-constructor";
-import {usersRepository} from "../../repositories/users-repository";
 import bcrypt from "bcrypt";
+import {usersRepository} from "../../composition-root";
+import {UserDBConstructor} from "../../types/user-constructor";
 
 export const checkCredential = async (req: Request, res: Response, next: NextFunction) => {
 

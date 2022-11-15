@@ -1,13 +1,14 @@
 import UserAgent from "user-agents";
-import {jwsService} from "../application/jws-service";
-import {securityRepository} from "../repositories/security-repository";
+import {JWTService} from "../application/jws-service";
+import {SecurityRepository} from "../repositories/security-repository";
 import {DeviceSecurityConstructor} from "../types/deviceSecurity-constructor";
-
-import {createToken} from "../helperFunctions";
 import {activeSessionsOutputType} from "../dataMapping/toActiveSessionsOutputType";
 import {UserDeviceConstructor} from "../types/user-device-type";
 
-class SecurityService {
+export class SecurityService {
+    constructor(protected jwsService: JWTService,
+                protected securityRepository: SecurityRepository) {}
+
     async createUserDevice(tokenPayload: any, ipAddress: string): Promise<boolean> {
         const userDeviceInfo: any = new UserAgent().data
 
@@ -25,7 +26,7 @@ class SecurityService {
             userDevice
         )
 
-        const createdDevice = await securityRepository.createUserDevice(createDevice)
+        const createdDevice = await this.securityRepository.createUserDevice(createDevice)
 
         if (!createdDevice) {
             return false
@@ -35,16 +36,16 @@ class SecurityService {
     }
 
     async createNewRefreshToken(refreshToken: string, tokenPayload: any) {
-        await jwsService.addTokenInBlackList(refreshToken)
-        const token = await createToken(tokenPayload.userId, tokenPayload.deviceId)
-        const newTokenPayload = await jwsService.giveTokenPayload(token.refreshToken)
-        await securityService.updateCurrentActiveSessions(newTokenPayload.deviceId, newTokenPayload.iat, newTokenPayload.exp)
+        await this.jwsService.addTokenInBlackList(refreshToken)
+        const token = await this.jwsService.createToken(tokenPayload.userId, tokenPayload.deviceId)
+        const newTokenPayload = await this.jwsService.giveTokenPayload(token.refreshToken)
+        await this.securityRepository.updateCurrentActiveSessions(newTokenPayload.deviceId, newTokenPayload.iat, newTokenPayload.exp)
 
         return token
     }
 
     async giveAllActiveSessions(userId: string) {
-        const activeSessions = await securityRepository.giveAllActiveSessions(userId)
+        const activeSessions = await this.securityRepository.giveAllActiveSessions(userId)
 
         if (!activeSessions) {
             return null
@@ -54,7 +55,7 @@ class SecurityService {
     }
 
     async giveDeviceById(deviceId: string): Promise<DeviceSecurityConstructor | null> {
-        const device = await securityRepository.giveDeviseById(deviceId)
+        const device = await this.securityRepository.giveDeviseById(deviceId)
 
         if (!device) {
             return null
@@ -63,25 +64,19 @@ class SecurityService {
         return device
     }
 
-    async updateCurrentActiveSessions(deviceId: string, iat: string, exp: string) {
-        return await securityRepository.updateCurrentActiveSessions(deviceId, iat, exp)
-    }
-
     async logoutFromCurrentSession(refreshToken: string) {
-        await jwsService.addTokenInBlackList(refreshToken)
-        const tokenPayload = await jwsService.giveTokenPayload(refreshToken)
-        await securityRepository.deleteDeviceById(tokenPayload.deviceId)
+        await this.jwsService.addTokenInBlackList(refreshToken)
+        const tokenPayload = await this.jwsService.giveTokenPayload(refreshToken)
+        await this.securityRepository.deleteDeviceById(tokenPayload.deviceId)
 
         return
     }
 
     async deleteDeviceById(deviceId: string): Promise<boolean> {
-        return await securityRepository.deleteDeviceById(deviceId)
+        return await this.securityRepository.deleteDeviceById(deviceId)
     }
 
     async deleteAllActiveSessions(userId: string, deviceId: string): Promise<boolean> {
-        return  await securityRepository.deleteAllActiveSessions(userId, deviceId)
+        return  await this.securityRepository.deleteAllActiveSessions(userId, deviceId)
     }
 }
-
-export const securityService = new SecurityService()
