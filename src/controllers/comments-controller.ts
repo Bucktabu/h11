@@ -3,13 +3,13 @@ import {URIParameters} from "../models/URIParameters";
 import {Response} from "express";
 import {CommentConstructor} from "../types/comment-constructor";
 import {CommentsService} from "../domain/comments-servise";
-import {commentsService} from "../composition-root";
 import {LikesModel} from "../models/likes-model";
 import {LikeStatusConstructor} from "../types/likeStatus-constructor";
-import {SortParameters} from "../models/sortParameters";
+import {UsersService} from "../domain/users-service";
 
 export class CommentsController {
-    constructor(protected commentsService: CommentsService) {}
+    constructor(protected commentsService: CommentsService,
+                protected usersService: UsersService) {}
 
     async getCommentByCommentId(req: RequestWithParams<URIParameters>,
                                 res: Response<CommentConstructor>) {
@@ -47,11 +47,11 @@ export class CommentsController {
         if (!comment) {
             res.sendStatus(404)
         }
-        // Посмотреть, когда мы запрашиваем комменты авторизированным пользователем, по дефолту
-        // должно возвращаться 'None'. Для авторизированного пользователя нужно добавить массив,
-        // в котором мы будем хранить все лайкнутые или дизлайкнутые айдишники комментов.
-        // TODO
+
+        await this.commentsService.updateLikesInfo(req.user!.id, req.params.id, req.body.likeStatus)
     }
+
+
 
     async deleteCommentByCommentId(req: RequestWithParams<URIParameters>,
                                    res: Response) {

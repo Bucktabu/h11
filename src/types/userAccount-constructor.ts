@@ -4,6 +4,6 @@ import {UserDBConstructor} from "./user-constructor";
 export class UserAccountConstructor {
     constructor(
         public accountData: UserDBConstructor,
-        public emailConfirmation: EmailConfirmationConstructor
+        public emailConfirmation: EmailConfirmationConstructor,
     ) {}
 }
