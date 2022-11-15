@@ -1,9 +1,9 @@
 import {PostsScheme} from "../schemes/posts-scheme";
-import {PostsType, PostType} from "../types/posts-type";
+import {PostsConstructor, PostConstructor} from "../types/posts-constructor";
 import {giveSkipNumber} from "../helperFunctions";
 
 class PostsRepository {
-    async createNewPost(newPost: PostType): Promise<PostType | null> {
+    async createNewPost(newPost: PostConstructor): Promise<PostConstructor | null> {
         try {
             await PostsScheme.create(newPost)
             return newPost
@@ -16,7 +16,7 @@ class PostsRepository {
                     sortDirection: 'asc' | 'desc',
                     pageNumber: string,
                     pageSize: string,
-                    blogId: string | undefined): Promise<PostsType> {
+                    blogId: string | undefined): Promise<PostsConstructor> {
 
         return PostsScheme
             .find({blogId: {$regex: blogId ? blogId : '', $options: 'i'}}, {projection: {_id: false}})
@@ -30,7 +30,7 @@ class PostsRepository {
         return PostsScheme.countDocuments({blogId: {$regex: blogId ? blogId : '', $options: 'i'}})
     }
 
-    async givePostById(postId: string): Promise<PostType | null> {
+    async givePostById(postId: string): Promise<PostConstructor | null> {
         return PostsScheme.findOne({id: postId}, {projection: {_id: false}})
     }
 

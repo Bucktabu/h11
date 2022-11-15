@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import {CommentBDType} from "../types/comment-type";
+import {CommentBDConstructor} from "../types/comment-constructor";
 
-const commentsScheme = new mongoose.Schema<CommentBDType>({
+const commentsScheme = new mongoose.Schema<CommentBDConstructor>({
     id: {type: String, required: true},
     content: {type: String, required: true},
     userId: {type: String, required: true},

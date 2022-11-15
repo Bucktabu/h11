@@ -1,9 +1,9 @@
 import {Response, Router} from "express";
-import {UsersService} from "../domain/users-service";
+import {usersService} from "../domain/users-service";
 import {CreateNewUser} from "../models/createNewUser";
 import {QueryParameters} from "../models/queryParameters";
 import {URIParameters} from "../models/URIParameters";
-import {ContentPageType} from "../types/content-page-type";
+import {ContentPageConstructor} from "../types/contentPage-constructor";
 import {RequestWithBody, RequestWithParams, RequestWithQuery} from "../types/request-types";
 import {deleteUsersRouter,
         getUsersRouterMiddleware,
@@ -12,13 +12,8 @@ import {deleteUsersRouter,
 export const usersRouter = Router({})
 
 class UserController {
-    private usersService: UsersService;
-    constructor() {
-        this.usersService = new UsersService
-    }
-
     async getUsersPage(req: RequestWithQuery<QueryParameters>, res: Response) {
-        const pageWithUsers: ContentPageType = await this.usersService
+        const pageWithUsers: ContentPageConstructor = await usersService
             .giveUsersPage(req.query.sortBy,
                 req.query.sortDirection,
                 req.query.pageNumber,
@@ -34,7 +29,7 @@ class UserController {
     }
 
     async createUser(req: RequestWithBody<CreateNewUser>, res: Response) {
-        const newUser = await this.usersService.createNewUser(req.body.login, req.body.password, req.body.email)
+        const newUser = await usersService.createNewUser(req.body.login, req.body.password, req.body.email)
 
         if (!newUser) {
             return res.sendStatus(404)
@@ -44,7 +39,7 @@ class UserController {
     }
 
     async deleteUserById(req: RequestWithParams<URIParameters>, res: Response) {
-        const isDeleted = await this.usersService.deleteUserById(req.params.id)
+        const isDeleted = await usersService.deleteUserById(req.params.id)
 
         if (!isDeleted) {
             return res.sendStatus(404)
@@ -60,7 +55,7 @@ usersRouter.post('/',
     ...postUsersRouterMiddleware, userControllerInstance.createUser.bind(userControllerInstance))
 
 usersRouter.get('/',
-    ...getUsersRouterMiddleware, userControllerInstance.getUsersPage.bind(userControllerInstance)) // TODO ???
+    ...getUsersRouterMiddleware, userControllerInstance.getUsersPage.bind(userControllerInstance))
 
 usersRouter.delete('/:id',
     ...deleteUsersRouter, userControllerInstance.deleteUserById.bind(userControllerInstance))

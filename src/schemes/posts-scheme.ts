@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import {PostType} from "../types/posts-type";
+import {PostConstructor} from "../types/posts-constructor";
 
-const postsScheme = new mongoose.Schema<PostType>({
+const postsScheme = new mongoose.Schema<PostConstructor>({
     id: {type: String, required: true},
     title: {type: String, required: true},
     shortDescription: {type: String, required: true},

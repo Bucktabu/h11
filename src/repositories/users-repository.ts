@@ -1,9 +1,9 @@
 import {UserScheme} from "../schemes/user-scheme";
-import {UserDB, UsersType} from "../types/user";
+import {UserDBConstructor, UsersType} from "../types/user-constructor";
 import {giveSkipNumber} from "../helperFunctions";
 
-export class UsersRepository {
-    async createNewUser(newUser: UserDB): Promise<UserDB | null> {
+class UsersRepository {
+    async createNewUser(newUser: UserDBConstructor): Promise<UserDBConstructor | null> {
         try {
             await UserScheme.create(newUser)
             return newUser
@@ -35,7 +35,7 @@ export class UsersRepository {
                     {email: {$regex: searchEmailTerm, $options: 'i'}}]})
     }
 
-    async giveUserById(id: string): Promise<UserDB | null> {
+    async giveUserById(id: string): Promise<UserDBConstructor | null> {
         return UserScheme.findOne({id})
     }
 
@@ -66,3 +66,5 @@ export class UsersRepository {
         }
     }
 }
+
+export const usersRepository = new UsersRepository()

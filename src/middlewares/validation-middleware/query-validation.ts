@@ -1,8 +1,9 @@
 import {NextFunction, Request, Response} from "express";
+import {QueryParameters} from "../../models/queryParameters";
 import {SortDirection, SortParameters} from "../../models/sortParameters";
 import {URIParameters} from "../../models/URIParameters";
 import {RequestWithParamsAndQuery} from "../../types/request-types";
-import {QueryParameters} from "../../models/queryParameters";
+
 
 export const sortByValidation = (req: RequestWithParamsAndQuery<URIParameters, QueryParameters>,
                                  res: Response, next: NextFunction) => {

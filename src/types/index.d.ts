@@ -1,9 +1,9 @@
-import {UserDB} from "./user";
+import {UserDBConstructor} from "./user-constructor";
 
 declare global {
     declare namespace Express {
         export interface  Request {
-            user: UserDB | null
+            user: UserDBConstructor | null
         }
     }
 } // расширение типов

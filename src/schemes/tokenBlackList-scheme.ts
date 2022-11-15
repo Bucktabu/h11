@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import {TokenType} from "../types/token-type";
+import {TokenConstructor} from "../types/token-constructor";
 
-const tokenBlackListScheme = new mongoose.Schema<TokenType>({
+const tokenBlackListScheme = new mongoose.Schema<TokenConstructor>({
     refreshToken: {type: String, required: true}
 })
 

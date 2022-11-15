@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import {DeviceSecurityType} from "../types/deviceSecurity-type";
+import {DeviceSecurityConstructor} from "../types/deviceSecurity-constructor";
 
-const securityScheme = new mongoose.Schema<DeviceSecurityType>({
+const securityScheme = new mongoose.Schema<DeviceSecurityConstructor>({
     userId: {type: String, required: true},
     userDevice: {
         deviceId: {type: String, required: true},

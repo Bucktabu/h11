@@ -1,6 +1,6 @@
-import {BlogType} from "../types/blogs-type";
+import {BlogConstructor} from "../types/blogs-constructor";
 
-export const blogOutputType = (blogDB: BlogType) => {
+export const blogOutputType = (blogDB: BlogConstructor) => {
     return {
         id: blogDB.id,
         name: blogDB.name,

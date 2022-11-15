@@ -9,9 +9,9 @@ import {PostsCreateNewPost} from "../models/postsCreateNewPost";
 import {PostsUpdatePost} from "../models/postsUpdatePost";
 import {URIParameters} from "../models/URIParameters";
 
-import {CommentType} from "../types/comment-type";
-import {ContentPageType} from "../types/content-page-type";
-import {PostType} from "../types/posts-type";
+import {CommentConstructor} from "../types/comment-constructor";
+import {ContentPageConstructor} from "../types/contentPage-constructor";
+import {PostConstructor} from "../types/posts-constructor";
 import {RequestWithBody,
         RequestWithParams,
         RequestWithParamsAndBody,
@@ -26,8 +26,8 @@ export const postsRouter = Router({})
 
 class PostController {
     async getPostsPage(req: RequestWithQuery<QueryParameters>,
-                       res: Response<ContentPageType>) {
-        const pageWithPosts: ContentPageType = await postsService
+                       res: Response<ContentPageConstructor>) {
+        const pageWithPosts: ContentPageConstructor = await postsService
             .givePostsPage(req.query.sortBy,
                 req.query.sortDirection,
                 req.query.pageNumber,
@@ -42,7 +42,7 @@ class PostController {
     }
 
     async getPostByPostId(req: RequestWithParams<URIParameters>,
-                          res: Response<PostType>) {
+                          res: Response<PostConstructor>) {
         const post = await postsService.givePostById(req.params.id)
 
         if (!post) {
@@ -53,8 +53,8 @@ class PostController {
     }
 
     async getCommentsPageByPostId(req: RequestWithParamsAndQuery<URIParameters, QueryParameters>,
-                                  res: Response<ContentPageType>) {
-        const pageWithComments: ContentPageType | null = await commentsService
+                                  res: Response<ContentPageConstructor>) {
+        const pageWithComments: ContentPageConstructor | null = await commentsService
             .giveCommentsPage(req.query.sortBy,
                 req.query.sortDirection,
                 req.query.pageNumber,
@@ -69,7 +69,7 @@ class PostController {
     }
 
     async createPost(req: RequestWithBody<PostsCreateNewPost>,
-                     res: Response<PostType | null>) {
+                     res: Response<PostConstructor | null>) {
         const newPost = await postsService
             .createNewPost(req.body.title, req.body.shortDescription, req.body.content, req.body.blogId)
 
@@ -81,7 +81,7 @@ class PostController {
     }
 
     async createCommentByPostId(req: RequestWithParamsAndBody<URIParameters, CreateNewComment>,
-                                res: Response<CommentType>) {
+                                res: Response<CommentConstructor>) {
         const post = await postsService.givePostById(req.params.id)
 
         if (!post) {
@@ -99,7 +99,7 @@ class PostController {
     }
 
     async updatePostByPostId(req: RequestWithParamsAndBody<URIParameters, PostsUpdatePost>,
-                              res: Response<PostType | null>) {
+                              res: Response<PostConstructor | null>) {
         const isUpdate = await postsService
             .updatePost(req.params.id,
                 req.body.title,

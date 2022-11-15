@@ -1,47 +1,25 @@
 import bcrypt from 'bcrypt'
-import {UsersRepository} from "../repositories/users-repository";
-import {UserDB, User} from "../types/user";
-import {ContentPageType} from "../types/content-page-type";
+import {authService} from "./auth-service";
+import {usersRepository} from "../repositories/users-repository";
+import {AboutMeConstructor} from "../types/aboutMe-constructor";
+import {ContentPageConstructor} from "../types/contentPage-constructor";
+import {UserDBConstructor, UserConstructor} from "../types/user-constructor";
 import {paginationContentPage} from "../paginationContentPage";
 import {_generateHash} from "../helperFunctions";
-import {AboutMeType} from "../types/aboutMe-type";
 import {userDBtoUser, usersOutputType} from "../dataMapping/toUserOutputType";
 
 export class UsersService {
-    userRepository: UsersRepository
-    constructor() {
-        this.userRepository = new UsersRepository()
-    }
-
-    async aboutMe(user: UserDB): Promise<AboutMeType> {
+    async aboutMe(user: UserDBConstructor): Promise<AboutMeConstructor> {
         return userDBtoUser(user)
     }
 
-    async createNewUser(login: string, password: string, email: string): Promise<User | null> {
-
-        const passwordSalt = await bcrypt.genSalt(10)
-        const passwordHash = await _generateHash(password, passwordSalt)
-
-        const createNewUser: UserDB = {
-            id: String(+new Date()),
-            login,
-            email,
-            passwordHash,
-            passwordSalt,
-            createdAt: new Date().toISOString()
-        }
-
-        const createdNewUser = await this.userRepository.createNewUser(createNewUser)
-
-        if (!createdNewUser) {
-            return null
-        }
-
-        return usersOutputType(createdNewUser)
+    async createNewUser(login: string, password: string, email: string): Promise<UserConstructor | null> {
+        const userAccount = await authService.createUser(login, password, email)
+        return usersOutputType(userAccount!.accountData)
     }
 
-    async giveUserById(id: string): Promise<UserDB | null> {
-        return this.userRepository.giveUserById(id)
+    async giveUserById(id: string): Promise<UserDBConstructor | null> {
+        return usersRepository.giveUserById(id)
     }
 
     async giveUsersPage(sortBy: string,
@@ -49,10 +27,10 @@ export class UsersService {
                         pageNumber: string,
                         pageSize: string,
                         searchLoginTerm: string,
-                        searchEmailTerm: string): Promise<ContentPageType> {
+                        searchEmailTerm: string): Promise<ContentPageConstructor> {
 
-        const users = await this.userRepository.giveUsers(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
-        const totalCount = await this.userRepository.giveTotalCount(searchLoginTerm, searchEmailTerm)
+        const users = await usersRepository.giveUsers(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
+        const totalCount = await usersRepository.giveTotalCount(searchLoginTerm, searchEmailTerm)
 
         return paginationContentPage(pageNumber, pageSize, users, totalCount)
     }
@@ -61,10 +39,12 @@ export class UsersService {
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await _generateHash(newPassword, passwordSalt) //TODO вынести в отдельную функцию
 
-        return await this.userRepository.updateUserPassword(userId, passwordSalt, passwordHash)
+        return await usersRepository.updateUserPassword(userId, passwordSalt, passwordHash)
     }
 
     async deleteUserById(userId: string): Promise<boolean> {
-        return await this.userRepository.deleteUserById(userId)
+        return await usersRepository.deleteUserById(userId)
     }
 }
+
+export const usersService = new UsersService()

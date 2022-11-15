@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import {UserDB} from "../types/user";
+import {UserDBConstructor} from "../types/user-constructor";
 
-const userScheme = new mongoose.Schema<UserDB>({
+const userScheme = new mongoose.Schema<UserDBConstructor>({
     id: {type: String, required: true},
     login: {type: String, required: true},
     email: {type: String, required: true},

@@ -1,9 +1,9 @@
 import {BlogSchema} from "../schemes/blog-scheme";
-import {BlogsType, BlogType} from "../types/blogs-type";
+import {BlogsConstructor, BlogConstructor} from "../types/blogs-constructor";
 import {giveSkipNumber} from "../helperFunctions";
 
 class BlogsRepository {
-    async createNewBlog(newBlog: BlogType): Promise<BlogType | null> {
+    async createNewBlog(newBlog: BlogConstructor): Promise<BlogConstructor | null> {
         try {
             await BlogSchema.create(newBlog)
             return newBlog
@@ -16,7 +16,7 @@ class BlogsRepository {
                     sortBy: string,
                     sortDirection: string,
                     pageNumber: string,
-                    pageSize: string): Promise<BlogsType> {
+                    pageSize: string): Promise<BlogsConstructor> {
 
         return BlogSchema
             .find({name: {$regex: searchNameTerm, $options: 'i'}}, {projection: {_id: false}})
@@ -30,7 +30,7 @@ class BlogsRepository {
         return BlogSchema.countDocuments({name: {$regex: searchNameTerm, $options: 'i'}})
     }
 
-    async giveBlogById(id: string): Promise<BlogType | null> {
+    async giveBlogById(id: string): Promise<BlogConstructor | null> {
         return BlogSchema.findOne({id: id}, {projection: {_id: false}})
     }
 

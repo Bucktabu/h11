@@ -1,6 +1,6 @@
-import {DeviceSecurityType} from "../types/deviceSecurity-type";
+import {DeviceSecurityConstructor} from "../types/deviceSecurity-constructor";
 
-export const activeSessionsOutputType = (device: DeviceSecurityType) => {
+export const activeSessionsOutputType = (device: DeviceSecurityConstructor) => {
     return {
         deviceId: device.userDevice.deviceId,
         title: device.userDevice.deviceTitle,

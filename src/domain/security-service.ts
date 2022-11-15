@@ -1,26 +1,29 @@
 import UserAgent from "user-agents";
 import {jwsService} from "../application/jws-service";
 import {securityRepository} from "../repositories/security-repository";
-import {DeviceSecurityType} from "../types/deviceSecurity-type";
+import {DeviceSecurityConstructor} from "../types/deviceSecurity-constructor";
 
 import {createToken} from "../helperFunctions";
 import {activeSessionsOutputType} from "../dataMapping/toActiveSessionsOutputType";
+import {UserDeviceConstructor} from "../types/user-device-type";
 
 class SecurityService {
     async createUserDevice(tokenPayload: any, ipAddress: string): Promise<boolean> {
-        const userDevice: any = new UserAgent().data
+        const userDeviceInfo: any = new UserAgent().data
 
-        const createDevice: DeviceSecurityType = {
-            userId: tokenPayload.userId,
-            userDevice: {
-                deviceId: tokenPayload.deviceId,
-                deviceTitle: userDevice.deviceCategory,
-                browser: userDevice.userAgent,
-                ipAddress,
-                iat: tokenPayload.iat,
-                exp: tokenPayload.exp
-            }
-        }
+        const userDevice = new UserDeviceConstructor(
+            tokenPayload.deviceId,
+            userDeviceInfo.deviceCategory,
+            userDeviceInfo.userAgent,
+            ipAddress,
+            tokenPayload.iat,
+            tokenPayload.exp
+        )
+
+        const createDevice = new DeviceSecurityConstructor(
+            tokenPayload.userId,
+            userDevice
+        )
 
         const createdDevice = await securityRepository.createUserDevice(createDevice)
 
@@ -50,7 +53,7 @@ class SecurityService {
         return activeSessions.map(activeSession => activeSessionsOutputType(activeSession))
     }
 
-    async giveDeviceById(deviceId: string): Promise<DeviceSecurityType | null> {
+    async giveDeviceById(deviceId: string): Promise<DeviceSecurityConstructor | null> {
         const device = await securityRepository.giveDeviseById(deviceId)
 
         if (!device) {

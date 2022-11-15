@@ -1,18 +1,18 @@
 import {blogsRepository} from "../repositories/blogs-repository";
-import {BlogType} from "../types/blogs-type";
-import {ContentPageType} from "../types/content-page-type";
+import {BlogConstructor} from "../types/blogs-constructor";
+import {ContentPageConstructor} from "../types/contentPage-constructor";
 import {paginationContentPage} from "../paginationContentPage";
 import {blogOutputType} from "../dataMapping/toBlogOutputType";
 
 class BlogsService {
-    async createNewBlog(name: string, youtubeUrl: string): Promise<BlogType | null> {
+    async createNewBlog(name: string, youtubeUrl: string): Promise<BlogConstructor | null> {
 
-        const newBlog: BlogType = {
-            id: String(+new Date()),
-            name: name,
-            youtubeUrl: youtubeUrl,
-            createdAt: new Date().toISOString()
-        }
+        const newBlog = new BlogConstructor(
+            String(+new Date()),
+            name,
+            youtubeUrl,
+            new Date().toISOString()
+        )
 
         const createdBlog = await blogsRepository.createNewBlog(newBlog)
 
@@ -27,7 +27,7 @@ class BlogsService {
                         sortBy: string,
                         sortDirection: string,
                         pageNumber: string,
-                        pageSize: string): Promise<ContentPageType | null> {
+                        pageSize: string): Promise<ContentPageConstructor | null> {
 
         const blogs = await blogsRepository
             .giveBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize)
@@ -41,7 +41,7 @@ class BlogsService {
         return paginationContentPage(pageNumber, pageSize, blogs, totalCount)
     }
 
-    async giveBlogById(blogId: string): Promise<BlogType | null> {
+    async giveBlogById(blogId: string): Promise<BlogConstructor | null> {
         return await blogsRepository.giveBlogById(blogId)
     }
 

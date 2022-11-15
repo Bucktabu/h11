@@ -1,9 +1,9 @@
 import {CommentsSchema} from "../schemes/comments-scheme";
-import {CommentBDType, CommentsType, CommentType} from "../types/comment-type";
+import {CommentBDConstructor, CommentsType, CommentConstructor} from "../types/comment-constructor";
 import {giveSkipNumber} from "../helperFunctions";
 
 class CommentsRepository {
-    async createNewComment(newComment: CommentBDType): Promise<CommentBDType | null> {
+    async createNewComment(newComment: CommentBDConstructor): Promise<CommentBDConstructor | null> {
         try {
             await CommentsSchema.create(newComment)
             return newComment
@@ -18,7 +18,7 @@ class CommentsRepository {
         return result.modifiedCount === 1
     }
 
-    async giveCommentById(commentId: string): Promise<CommentType | null> {
+    async giveCommentById(commentId: string): Promise<CommentConstructor | null> {
         const comment = await CommentsSchema.findOne({id: commentId}, {projection: {_id: false, postId: false}})
 
         if (!comment) {

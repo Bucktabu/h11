@@ -1,8 +1,8 @@
 import {EmailConfirmationScheme} from "../schemes/emailConfirm-scheme";
-import {EmailConfirmationType} from "../types/email-confirmation-type";
+import {EmailConfirmationConstructor} from "../types/emailConfirmation-constructor";
 
 class EmailConfirmationRepository {
-    async createEmailConfirmation(emailConfirmation: EmailConfirmationType) {
+    async createEmailConfirmation(emailConfirmation: EmailConfirmationConstructor) {
         try {
             await EmailConfirmationScheme.create(emailConfirmation)
             return emailConfirmation
@@ -11,7 +11,7 @@ class EmailConfirmationRepository {
         }
     }
 
-    async giveEmailConfirmationByCodeOrId(codeOrId: string): Promise<EmailConfirmationType | null> {
+    async giveEmailConfirmationByCodeOrId(codeOrId: string): Promise<EmailConfirmationConstructor | null> {
         return EmailConfirmationScheme
             .findOne({$or: [{confirmationCode: codeOrId}, {id: codeOrId}]},
                 {projection:{_id: false}})

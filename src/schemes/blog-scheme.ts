@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import {BlogType} from "../types/blogs-type";
+import {BlogConstructor} from "../types/blogs-constructor";
 
-const blogScheme = new mongoose.Schema<BlogType>({
+const blogScheme = new mongoose.Schema<BlogConstructor>({
     id: {type: String, required: true},
     name: {type: String, required: true},
     youtubeUrl: {type: String, required: true},

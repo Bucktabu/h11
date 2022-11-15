@@ -1,21 +1,21 @@
 import {commentsRepository} from "../repositories/comments-repository";
-import {CommentType} from "../types/comment-type";
-import {UserDB} from "../types/user";
-import {ContentPageType} from "../types/content-page-type";
+import {CommentBDConstructor, CommentConstructor} from "../types/comment-constructor";
+import {UserDBConstructor} from "../types/user-constructor";
+import {ContentPageConstructor} from "../types/contentPage-constructor";
 
 import {paginationContentPage} from "../paginationContentPage";
 import {commentOutputType} from "../dataMapping/toCommentOutputType";
 
 class CommentsService {
-    async createNewComment(postId: string, comment: string, user: UserDB): Promise<CommentType | null> {
-        const newComment = {
-            id: String(+new Date()),
-            content: comment,
-            userId: user.id,
-            userLogin: user.login,
-            createdAt: new Date().toISOString(),
-            postId: postId
-        }
+    async createNewComment(postId: string, comment: string, user: UserDBConstructor): Promise<CommentConstructor | null> {
+        const newComment = new CommentBDConstructor(
+            String(+new Date()),
+            comment,
+            user.id,
+            user.login,
+            new Date().toISOString(),
+            postId
+        )
 
         const createdComment = await commentsRepository.createNewComment(newComment)
 
@@ -30,7 +30,7 @@ class CommentsService {
         return await commentsRepository.updateComment(commentId, comment)
     }
 
-    async giveCommentById(commentId: string): Promise<CommentType | null> {
+    async giveCommentById(commentId: string): Promise<CommentConstructor | null> {
 
         const comment = await commentsRepository.giveCommentById(commentId)
 
@@ -45,7 +45,7 @@ class CommentsService {
                            sortDirection: 'asc' | 'desc',
                            pageNumber: string,
                            pageSize: string,
-                           userId: string): Promise<ContentPageType | null> {
+                           userId: string): Promise<ContentPageConstructor | null> {
 
         const commentsDB = await commentsRepository.giveComments(sortBy, sortDirection, pageNumber, pageSize, userId)
 

@@ -1,8 +1,8 @@
 import {SecurityScheme} from "../schemes/security-scheme";
-import {DeviceSecurityType} from "../types/deviceSecurity-type";
+import {DeviceSecurityConstructor} from "../types/deviceSecurity-constructor";
 
 class SecurityRepository {
-    async createUserDevice(createDevice: DeviceSecurityType) {
+    async createUserDevice(createDevice: DeviceSecurityConstructor) {
         try {
             return SecurityScheme.create(createDevice)
         } catch (e) {

@@ -1,6 +1,6 @@
-import {PostType} from "../types/posts-type";
+import {PostConstructor} from "../types/posts-constructor";
 
-export const postOutputType = (postsBD: PostType) => {
+export const postOutputType = (postsBD: PostConstructor) => {
     return {
         id: postsBD.id,
         title: postsBD.title,

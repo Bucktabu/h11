@@ -9,9 +9,9 @@ import {QueryParameters} from "../models/queryParameters";
 import {BlogsCreateNewPost} from "../models/blogCreateNewPost";
 import {URIParameters} from "../models/URIParameters";
 
-import {BlogType} from "../types/blogs-type";
-import {PostType} from "../types/posts-type";
-import {ContentPageType} from "../types/content-page-type";
+import {BlogConstructor} from "../types/blogs-constructor";
+import {PostConstructor} from "../types/posts-constructor";
+import {ContentPageConstructor} from "../types/contentPage-constructor";
 import {RequestWithBody,
     RequestWithParams,
     RequestWithParamsAndBody,
@@ -27,7 +27,7 @@ export const blogsRouter = Router({})
 
 class BlogController {
     async getBlogById(req: RequestWithParams<URIParameters>,
-                      res: Response<BlogType>) {
+                      res: Response<BlogConstructor>) {
         const blog = await blogsService.giveBlogById(req.params.id)
 
         if (!blog) {
@@ -38,8 +38,8 @@ class BlogController {
     }
 
     async getBlogsPage(req: RequestWithQuery<QueryParameters>,
-                       res: Response<ContentPageType>) {
-        const pageWithBlogs: ContentPageType | null = await blogsService
+                       res: Response<ContentPageConstructor>) {
+        const pageWithBlogs: ContentPageConstructor | null = await blogsService
             .giveBlogsPage(req.query.searchNameTerm,
                 req.query.sortBy,
                 req.query.sortDirection,
@@ -54,8 +54,8 @@ class BlogController {
     }
 
     async getPostsPageByBlogId(req: RequestWithParamsAndQuery<URIParameters, QueryParameters>,
-                              res: Response<ContentPageType>) {
-        const blog: BlogType | null = await blogsService.giveBlogById(req.params.id)
+                              res: Response<ContentPageConstructor>) {
+        const blog: BlogConstructor | null = await blogsService.giveBlogById(req.params.id)
 
         if (!blog) {
             return res.sendStatus(404)
@@ -71,7 +71,7 @@ class BlogController {
         res.status(200).send(pageWithPosts)
     }
 
-    async createBlog(req: RequestWithBody<BlogsCreateNewBlog>, res: Response<BlogType>) {
+    async createBlog(req: RequestWithBody<BlogsCreateNewBlog>, res: Response<BlogConstructor>) {
         const newBlog = await blogsService.createNewBlog(req.body.name, req.body.youtubeUrl)
 
         if (!newBlog) {
@@ -82,7 +82,7 @@ class BlogController {
     }
 
     async createPostByBlogId(req: RequestWithParamsAndBody<URIParameters, BlogsCreateNewPost>,
-                             res: Response<PostType>) {
+                             res: Response<PostConstructor>) {
         const existsBlog = await blogsService.giveBlogById(req.params.id)
 
         if (!existsBlog) {
@@ -96,7 +96,7 @@ class BlogController {
     }
 
     async updateBlogById(req: RequestWithParamsAndBody<URIParameters, BlogsUpdateBlog>,
-                         res: Response<BlogType | null>) {
+                         res: Response<BlogConstructor | null>) {
         const isUpdate = await blogsService.updateBlog(req.params.id, req.body.name, req.body.youtubeUrl)
 
         if (!isUpdate) {

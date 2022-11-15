@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import {UserIpAddressType} from "../types/UserIpAddress";
+import {UserIpAddressConstructor} from "../types/UserIpAddress-constructor";
 
-const ipAddressScheme = new mongoose.Schema<UserIpAddressType>({
+const ipAddressScheme = new mongoose.Schema<UserIpAddressConstructor>({
     ipAddress: {type: String, required: true},
     endpoint: {type: String, required: true},
     connectionAt: {type: Number, required: true}

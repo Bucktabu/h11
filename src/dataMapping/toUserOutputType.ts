@@ -1,6 +1,6 @@
-import {UserDB} from "../types/user";
+import {UserDBConstructor} from "../types/user-constructor";
 
-export const userDBtoUser = (userDB: UserDB) => {
+export const userDBtoUser = (userDB: UserDBConstructor) => {
     return {
         email: userDB.email,
         login: userDB.login,
@@ -8,11 +8,11 @@ export const userDBtoUser = (userDB: UserDB) => {
     }
 }
 
-export const usersOutputType = (userDB: UserDB) => {
+export const usersOutputType = (accountData: UserDBConstructor) => {
     return {
-        id: userDB.id,
-        login: userDB.login,
-        email: userDB.email,
-        createdAt: userDB.createdAt
+        id: accountData.id,
+        login: accountData.login,
+        email: accountData.email,
+        createdAt: accountData.createdAt
     }
 }

@@ -4,17 +4,17 @@ import {authService} from "../domain/auth-service";
 import {securityService} from "../domain/security-service";
 import {jwsService} from "../application/jws-service";
 import {usersService} from "../domain/users-service";
+import {emailsManager} from "../managers/email-manager";
+import {emailConfirmationRepository} from "../repositories/emailConfirmation-repository";
+import {usersRepository} from "../repositories/users-repository";
 import {limiterAndEmailValidation,
         getAuthRouterMiddleware,
         postAuthRouterMiddleware,
         postRegistrationMiddleware,
         limiterAndPasswordValidation} from "../middlewares/authRouter-middleware";
-import {refreshTokenValidation} from "../middlewares/validation-middleware/refreshToken-validation";
 import {createToken} from "../helperFunctions";
 import {ipAddressLimiter} from "../middlewares/validation-middleware/ipAddressLimiter";
-import {emailsManager} from "../managers/email-manager";
-import {emailConfirmationRepository} from "../repositories/emailConfirmation-repository";
-import {usersRepository} from "../repositories/users-repository";
+import {refreshTokenValidation} from "../middlewares/validation-middleware/refreshToken-validation";
 
 export const authRouter = Router({})
 
@@ -72,7 +72,7 @@ class AuthController {
     }
 
     async registration(req: Request, res: Response) {
-        await authService.createUser(req.body.login, req.body.password, req.body.email, req.ip)
+        await authService.createUser(req.body.login, req.body.password, req.body.email)
 
         return res.sendStatus(204)
     }

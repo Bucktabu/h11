@@ -1,7 +1,7 @@
 import {postsRepository} from "../repositories/posts-repository";
 import {blogsRepository} from "../repositories/blogs-repository";
-import {PostType} from "../types/posts-type";
-import {ContentPageType} from "../types/content-page-type";
+import {PostConstructor} from "../types/posts-constructor";
+import {ContentPageConstructor} from "../types/contentPage-constructor";
 
 import {paginationContentPage} from "../paginationContentPage";
 import {postOutputType} from "../dataMapping/toPostOutputType";
@@ -10,17 +10,17 @@ class PostsService {
     async createNewPost(title: string,
                         shortDescription: string,
                         content: string,
-                        blogId: string): Promise<PostType | null> {
+                        blogId: string): Promise<PostConstructor | null> {
 
-        const newPost: PostType = {
-            id: String(+new Date()),
+        const newPost = new PostConstructor(
+            String(+new Date()),
             title,
             shortDescription,
             content,
             blogId,
-            blogName: await this.giveBlogName(blogId),
-            createdAt: new Date().toISOString()
-        }
+            await this.giveBlogName(blogId),
+            new Date().toISOString()
+        )
 
         const createdNewPost = await postsRepository.createNewPost(newPost)
 
@@ -45,7 +45,7 @@ class PostsService {
                         sortDirection: 'asc' | 'desc',
                         pageNumber: string,
                         pageSize: string,
-                        blogId?: string): Promise<ContentPageType> {
+                        blogId?: string): Promise<ContentPageConstructor> {
 
         const content = await postsRepository.givePosts(sortBy, sortDirection, pageNumber, pageSize, blogId)
         const totalCount = await postsRepository.giveTotalCount(blogId)
@@ -53,7 +53,7 @@ class PostsService {
         return paginationContentPage(pageNumber, pageSize, content, totalCount)
     }
 
-    async givePostById(postId: string): Promise<PostType | null> {
+    async givePostById(postId: string): Promise<PostConstructor | null> {
         return await postsRepository.givePostById(postId)
     }
 
