@@ -10,7 +10,6 @@ import {LikeStatusConstructor} from "../types/likeStatus-constructor";
 
 export class CommentsController {
     constructor(protected commentsService: CommentsService,
-                protected jwtService: JWTService,
                 protected usersService: UsersService) {}
 
     async getCommentByCommentId(req: RequestWithParams<URIParameters>,

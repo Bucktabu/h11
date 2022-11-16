@@ -11,6 +11,7 @@ import {UserLikesRepository} from "../repositories/userLikes-repositiry";
 import {commentOutputDataForNotAuthorisationUser} from "../dataMapping/getCommentForNotAuthUserOutputData";
 import {JWTService} from "../application/jws-service";
 import {commentOutputDataForAuthorisationUser} from "../dataMapping/commentOutputDataForAuthorisationUser";
+import {randomUUID} from "crypto";
 
 export class CommentsService {
     constructor(protected jwtService: JWTService,
@@ -87,12 +88,12 @@ export class CommentsService {
 
     async giveCommentOutputModel(accessToken: string, commentDB: CommentBDConstructor) {
         if (!accessToken) {
-            return commentOutputDataForNotAuthorisationUser(commentDB)
+            return await commentOutputDataForNotAuthorisationUser(commentDB)
         }
 
         const tokenPayload = await this.jwtService.giveTokenPayload(accessToken)
 
-        return commentOutputDataForAuthorisationUser(commentDB, tokenPayload.userId)
+        return await commentOutputDataForAuthorisationUser(commentDB, tokenPayload.userId)
     } // TODO ??? получаю [object Promise]
 
     async updateLikesInfo(userId: string, commentId: string, likeStatus: string) {

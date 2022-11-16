@@ -95,8 +95,9 @@ describe('/posts', () => {
             .get(`/comments/${createComment.body.id}`)
             .expect(200)
 
-        console.log('-----> received comment from test 98: ' + checkReactionIsUpdated.body) // TODO [object Object]
-        expect(checkReactionIsUpdated.body.likesInfo.likeStatus).toEqual('Like')
+        const response = JSON.parse(checkReactionIsUpdated.text)
+
+        expect(response.likesInfo.myStatus).toEqual('None')
     })
 })
 /// Blogs router test

@@ -20,14 +20,14 @@ export class LikesInfoRepository {
 
     async removeLikeOrDislike(commentId: string, field: string) {
         const result = await LikesInfoScheme
-            .updateOne({commentId},{field: {$inc: -1}})
+            .updateOne({commentId},{[field]: {$inc: 1}})
 
         return result.matchedCount === 1
     }
 
     async updateLikeOrDislikeCount(commentId: string, field: string) {
         const result = await LikesInfoScheme
-            .updateOne({commentId},{field: {$inc: 1}})
+            .updateOne({commentId},{[field]: {$inc: 1}})
 
         return result.matchedCount === 1
     }
