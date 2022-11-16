@@ -8,10 +8,13 @@ import {paginationContentPage} from "../paginationContentPage";
 import {commentOutputType} from "../dataMapping/toCommentOutputData";
 import {LikesInfoRepository} from "../repositories/likesInfo-repository";
 import {UserLikesRepository} from "../repositories/userLikes-repositiry";
-import {getCommentsForNotAuthorisationUserOutputData} from "../dataMapping/getCimmentForNotAuthUserOutputData";
+import {commentOutputDataForNotAuthorisationUser} from "../dataMapping/getCommentForNotAuthUserOutputData";
+import {JWTService} from "../application/jws-service";
+import {commentOutputDataForAuthorisationUser} from "../dataMapping/commentOutputDataForAuthorisationUser";
 
 export class CommentsService {
-    constructor(protected commentsRepository: CommentsRepository,
+    constructor(protected jwtService: JWTService,
+                protected commentsRepository: CommentsRepository,
                 protected likesInfoRepository: LikesInfoRepository,
                 protected userLikesRepository: UserLikesRepository) {}
 
@@ -42,7 +45,7 @@ export class CommentsService {
             return null
         }
 
-        return getCommentsForNotAuthorisationUserOutputData(createdComment)
+        return commentOutputDataForNotAuthorisationUser(createdComment)
     }
 
     async updateComment(commentId: string, comment: string): Promise<boolean> {
@@ -82,9 +85,19 @@ export class CommentsService {
         return this.commentsRepository.giveCommentById(commentId)
     }
 
+    async giveCommentOutputModel(accessToken: string, commentDB: CommentBDConstructor) {
+        if (!accessToken) {
+            return commentOutputDataForNotAuthorisationUser(commentDB)
+        }
+
+        const tokenPayload = await this.jwtService.giveTokenPayload(accessToken)
+
+        return commentOutputDataForAuthorisationUser(commentDB, tokenPayload.userId)
+    } // TODO ??? получаю [object Promise]
+
     async updateLikesInfo(userId: string, commentId: string, likeStatus: string) {
         const commentReacted = await this.userLikesRepository.giveUserLike(userId, commentId)
-        console.log('-----> commentReacted: ' + commentReacted)
+
         if (!commentReacted) {
             await this.userLikesRepository.addUserReact(userId, commentId, likeStatus)
         }
@@ -108,7 +121,7 @@ export class CommentsService {
         }
 
         return true
-    } // TODO остановился здесь
+    }
 
     async deleteCommentById(commentId: string): Promise<boolean> {
         return await this.commentsRepository.deleteCommentById(commentId)

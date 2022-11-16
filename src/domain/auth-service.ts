@@ -8,7 +8,6 @@ import {UserAccountConstructor} from "../types/userAccount-constructor";
 import {_generateHash} from "../helperFunctions";
 import {UserDBConstructor} from "../types/user-constructor";
 import {EmailConfirmationConstructor} from "../types/emailConfirmation-constructor";
-import {UserLikeStatusConstructor} from "../types/userLikeStatus-constructor";
 
 export class AuthService {
     constructor(protected usersRepository: UsersRepository) {}
@@ -36,7 +35,7 @@ export class AuthService {
 
         const userAccount = new UserAccountConstructor(accountData, emailConfirmation)
 
-        console.log('confirmationCode:', userAccount.emailConfirmation.confirmationCode)
+        //console.log('confirmationCode:', userAccount.emailConfirmation.confirmationCode)
         const createdAccount = await this.createUserAccount(userAccount)
 
         if (!createdAccount) {

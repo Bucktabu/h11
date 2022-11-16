@@ -8,7 +8,7 @@ describe('/posts', () => {
         await request(app).delete('/testing/all-data')
     })
 
-    it('Method POST /posts/postId/comments + POST /users`with 201 + POST /auth with 200 + GET /comments by ID 200. Expect 400 - So long input values', async () => {
+    it('update like status', async () => {
         await request(app)
             .post('/users')
             .send({
@@ -19,7 +19,7 @@ describe('/posts', () => {
             .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
             .expect(201)
 
-        const userRegistration = await request(app)
+        const userCreatedComment = await request(app)
             .post('/auth/login')
             .send({
                 "login": "login",
@@ -47,16 +47,56 @@ describe('/posts', () => {
             .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
             .expect(201)
 
-        const createResponse = await request(app)
+        const createComment = await request(app)
             .post(`/posts/${createNewPost.body.id}/comments`)
             .send({
                 "content": "koPcJQy6fNYWkxAK09XN" // 20
             })
-            .set({Authorization: `Bearer ${userRegistration.body.accessToken}`})
+            .set({Authorization: `Bearer ${userCreatedComment.body.accessToken}`})
             .expect(201)
 
+        await request(app)
+            .post('/users')
+            .send({
+                "login": "login",
+                "password": "password",
+                "email": "someonemail@gmail.com"
+            })
+            .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
+            .expect(201)
 
+        await request(app)
+            .post('/users')
+            .send({
+                "login": "userLiked",
+                "password": "password",
+                "email": "someonemail@gmail.com"
+            })
+            .set({Authorization: 'Basic YWRtaW46cXdlcnR5'})
+            .expect(201)
 
+        const userLikedComment = await request(app)
+            .post('/auth/login')
+            .send({
+                "login": "userLiked",
+                "password": "password"
+            })
+            .expect(200)
+
+        await request(app)
+            .put(`/comments/${createComment.body.id}/like-status`)
+            .send({
+                "likeStatus": "Like"
+            })
+            .set({Authorization: `Bearer ${userLikedComment.body.accessToken}`})
+            .expect(204)
+
+        const checkReactionIsUpdated = await request(app)
+            .get(`/comments/${createComment.body.id}`)
+            .expect(200)
+
+        console.log('-----> received comment from test 98: ' + checkReactionIsUpdated.body) // TODO [object Object]
+        expect(checkReactionIsUpdated.body.likesInfo.likeStatus).toEqual('Like')
     })
 })
 /// Blogs router test

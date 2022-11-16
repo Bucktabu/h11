@@ -36,11 +36,12 @@ export const usersRepository = new UsersRepository()
 
 const authService = new AuthService(usersRepository)
 const blogsService = new BlogsService(blogsRepository)
+export const jwtService = new JWTService(jwtBlackList)
 export const commentsService = new CommentsService(
+    jwtService,
     commentsRepository,
     likesInfoRepository,
     userLikesRepository)
-export const jwtService = new JWTService(jwtBlackList)
 const postsService = new PostsService(postsRepository, blogsRepository)
 export const securityService = new SecurityService(
     jwtService,

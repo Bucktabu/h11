@@ -1,9 +1,9 @@
 import {CommentBDConstructor} from "../types/comment-constructor";
 import {likesInfoRepository} from "../composition-root";
 
-export const getCommentsForNotAuthorisationUserOutputData = async (comment: CommentBDConstructor): Promise<CommentBDConstructor> => {
-    let likeInfo = await likesInfoRepository.giveLikeInfo(comment.id)
-    console.log('-----> likeInfo: ' + likeInfo)
+export const commentOutputDataForNotAuthorisationUser = async (comment: CommentBDConstructor) => {
+    const likeInfo = await likesInfoRepository.giveLikeInfo(comment.id)
+
     return {
         id: comment.id,
         content: comment.content,
