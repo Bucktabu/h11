@@ -28,6 +28,7 @@ export class CommentsController {
             console.log('-----> commentWithLikeStatus: ' + commentWithLikeStatus)
             return res.status(200).send(commentWithLikeStatus)
         }
+
         const comment = getCommentsForNotAuthorisationUserOutputData(commentDB)
         console.log('-----> comment: ' + comment)
         return res.status(200).send(comment)

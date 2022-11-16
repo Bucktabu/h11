@@ -8,6 +8,7 @@ import {paginationContentPage} from "../paginationContentPage";
 import {commentOutputType} from "../dataMapping/toCommentOutputData";
 import {LikesInfoRepository} from "../repositories/likesInfo-repository";
 import {UserLikesRepository} from "../repositories/userLikes-repositiry";
+import {getCommentsForNotAuthorisationUserOutputData} from "../dataMapping/getCimmentForNotAuthUserOutputData";
 
 export class CommentsService {
     constructor(protected commentsRepository: CommentsRepository,
@@ -35,12 +36,13 @@ export class CommentsService {
         )
 
         const createdComment = await this.commentsRepository.createNewComment(newComment)
+        await this.likesInfoRepository.createLikeInfo(likesInfo)
 
         if (!createdComment) {
             return null
         }
 
-        return commentOutputType(createdComment)
+        return getCommentsForNotAuthorisationUserOutputData(createdComment)
     }
 
     async updateComment(commentId: string, comment: string): Promise<boolean> {

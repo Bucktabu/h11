@@ -75,7 +75,7 @@ export class PostsController {
     }
 
     async createCommentByPostId(req: RequestWithParamsAndBody<URIParameters, CreateNewComment>,
-                                res: Response<CommentConstructor>) {
+                                res: Response) {
         const post = await this.postsService.givePostById(req.params.id)
 
         if (!post) {

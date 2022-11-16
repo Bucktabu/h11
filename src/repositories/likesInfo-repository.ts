@@ -1,5 +1,5 @@
 import {LikesInfoScheme} from "../schemes/likeInfo-scheme";
-import {TokenBlackListScheme} from "../schemes/tokenBlackList-scheme";
+import {LikesInfoConstructor} from "../types/likesInfo-constructor";
 
 export class LikesInfoRepository {
     // async removeLike(commentId: string) {
@@ -10,8 +10,12 @@ export class LikesInfoRepository {
     //     return LikesInfoScheme.updateOne({commentId}, {dislikesCount: {$inc: -1}})
     // }
 
+    async createLikeInfo(likeInfo: LikesInfoConstructor) {
+        return LikesInfoScheme.create(likeInfo)
+    }
+
     async giveLikeInfo(commentId: string) {
-        return LikesInfoScheme.findOne({commentId}, {projection: {_id: false}})
+        return LikesInfoScheme.findOne({commentId}, {projection: {_id: false, __v: false}})
     }
 
     async removeLikeOrDislike(commentId: string, field: string) {

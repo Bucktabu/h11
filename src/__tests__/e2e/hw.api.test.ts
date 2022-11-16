@@ -55,7 +55,7 @@ describe('/posts', () => {
             .set({Authorization: `Bearer ${userRegistration.body.accessToken}`})
             .expect(201)
 
-        console.log(createResponse.body)
+
 
     })
 })
