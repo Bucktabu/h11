@@ -6,3 +6,11 @@ export class LikesInfoConstructor {
         public dislikesCount: number
     ) {}
 }
+
+export class LikesInfoOutputConstructor {
+    constructor(
+        public myStatus: 'None' | 'Like' | 'Dislike',
+        public likesCount: number,
+        public dislikesCount: number
+    ) {}
+}

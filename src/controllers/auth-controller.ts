@@ -26,7 +26,7 @@ export class AuthController {
 
         await this.securityService.createUserDevice(tokenPayload, req.ip) // can check and send 404
 
-        //console.log('----->> refreshToken', token.refreshToken)
+        console.log('----->> refreshToken', token.refreshToken)
         return res.status(200)
             .cookie('refreshToken', token.refreshToken, {secure: true, httpOnly: true})
             .send({accessToken: token.accessToken})

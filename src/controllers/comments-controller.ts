@@ -2,11 +2,12 @@ import {Response} from "express";
 import {CommentsService} from "../domain/comments-servise";
 import {UsersService} from "../domain/users-service";
 import {URIParameters} from "../models/URIParameters";
-import {CommentConstructor} from "../types/comment-constructor";
+import {CommentBDConstructor, CommentConstructor} from "../types/comment-constructor";
 import {RequestWithParams, RequestWithParamsAndBody} from "../types/request-types";
 import {getCommentsForAuthorisationUserOutputData} from "../dataMapping/getCommentsForAuthorisationUserOutputData";
 import {JWTService} from "../application/jws-service";
 import {LikeStatusConstructor} from "../types/likeStatus-constructor";
+import {getCommentsForNotAuthorisationUserOutputData} from "../dataMapping/getCimmentForNotAuthUserOutputData";
 
 export class CommentsController {
     constructor(protected commentsService: CommentsService,
@@ -14,20 +15,21 @@ export class CommentsController {
                 protected usersService: UsersService) {}
 
     async getCommentByCommentId(req: RequestWithParams<URIParameters>,
-                                res: Response<CommentConstructor>) {
-        const comment = await this.commentsService.giveComment(req.params.id)
+                                res: Response) {
+        const commentDB = await this.commentsService.giveComment(req.params.id)
 
-        if (!comment) {
+        if (!commentDB) {
             return res.sendStatus(404)
         }
 
         if (req.headers.accessToken) {
             const tokenPayload = await this.jwtService.giveTokenPayload(req.headers.accessToken as string)
-            const commentWithLikeStatus = getCommentsForAuthorisationUserOutputData([comment], tokenPayload.userId)
+            const commentWithLikeStatus = getCommentsForAuthorisationUserOutputData(commentDB, tokenPayload.userId)
             console.log('-----> commentWithLikeStatus: ' + commentWithLikeStatus)
-            return res.status(200)/*.send(commentWithLikeStatus)*/
+            return res.status(200).send(commentWithLikeStatus)
         }
-
+        const comment = getCommentsForNotAuthorisationUserOutputData(commentDB)
+        console.log('-----> comment: ' + comment)
         return res.status(200).send(comment)
     }
 

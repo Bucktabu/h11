@@ -19,7 +19,7 @@ export class CommentsRepository {
     }
 
     async giveCommentById(commentId: string): Promise<CommentBDConstructor | null> {
-        const comment = await CommentsSchema.findOne({id: commentId}, {projection: {_id: false, postId: false}})
+        const comment = await CommentsSchema.findOne({id: commentId}, {projection: {_id: false, __v: false}})
 
         if (!comment) {
             return null

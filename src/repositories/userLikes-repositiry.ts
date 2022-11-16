@@ -1,10 +1,9 @@
 import {UserLikesScheme} from "../schemes/userlikes-scheme";
-import {LikesInfoScheme} from "../schemes/likeInfo-scheme";
 
 export class UserLikesRepository {
     async giveUserLike(userId: string, commentId: string) {
         return UserLikesScheme
-            .findOne({$and: [{userId}, {commentId}]})
+            .findOne({$and: [{userId}, {commentId}]}, {projection: {commentId: false}})
     }
 
     async addUserReact(userId: string, commentId: string, likeStatus: string): Promise<boolean> {
