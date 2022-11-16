@@ -7,4 +7,4 @@ const likesInfoScheme = new mongoose.Schema<LikesInfoConstructor>({
     dislikesCount: {type: Number, required: true}
 })
 
-export const LikesInfoScheme = mongoose.model('userLikes', likesInfoScheme)
+export const LikesInfoScheme = mongoose.model('userInfo', likesInfoScheme)

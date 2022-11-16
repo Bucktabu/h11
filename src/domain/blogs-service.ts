@@ -2,7 +2,7 @@ import {BlogsRepository} from "../repositories/blogs-repository";
 import {BlogConstructor} from "../types/blogs-constructor";
 import {ContentPageConstructor} from "../types/contentPage-constructor";
 import {paginationContentPage} from "../paginationContentPage";
-import {blogOutputType} from "../dataMapping/toBlogOutputType";
+import {blogOutputType} from "../dataMapping/toBlogOutputData";
 
 export class BlogsService {
     constructor(protected blogsRepository: BlogsRepository) {}

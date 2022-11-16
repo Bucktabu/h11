@@ -1,22 +1,31 @@
-import {RequestWithParams, RequestWithParamsAndBody} from "../types/request-types";
-import {URIParameters} from "../models/URIParameters";
 import {Response} from "express";
-import {CommentConstructor} from "../types/comment-constructor";
 import {CommentsService} from "../domain/comments-servise";
-import {LikesModel} from "../models/likes-model";
-import {LikeStatusConstructor} from "../types/likeStatus-constructor";
 import {UsersService} from "../domain/users-service";
+import {URIParameters} from "../models/URIParameters";
+import {CommentConstructor} from "../types/comment-constructor";
+import {RequestWithParams, RequestWithParamsAndBody} from "../types/request-types";
+import {getCommentsForAuthorisationUserOutputData} from "../dataMapping/getCommentsForAuthorisationUserOutputData";
+import {JWTService} from "../application/jws-service";
+import {LikeStatusConstructor} from "../types/likeStatus-constructor";
 
 export class CommentsController {
     constructor(protected commentsService: CommentsService,
+                protected jwtService: JWTService,
                 protected usersService: UsersService) {}
 
     async getCommentByCommentId(req: RequestWithParams<URIParameters>,
                                 res: Response<CommentConstructor>) {
-        const comment = await this.commentsService.giveCommentById(req.params.id)
+        const comment = await this.commentsService.giveComment(req.params.id)
 
         if (!comment) {
             return res.sendStatus(404)
+        }
+
+        if (req.headers.accessToken) {
+            const tokenPayload = await this.jwtService.giveTokenPayload(req.headers.accessToken as string)
+            const commentWithLikeStatus = getCommentsForAuthorisationUserOutputData([comment], tokenPayload.userId)
+            console.log('-----> commentWithLikeStatus: ' + commentWithLikeStatus)
+            return res.status(200)/*.send(commentWithLikeStatus)*/
         }
 
         return res.status(200).send(comment)
@@ -36,12 +45,6 @@ export class CommentsController {
     }
 
     async updateLikeStatus(req: RequestWithParamsAndBody<URIParameters, LikeStatusConstructor>, res: Response) {
-        const likeStatus = Object.values(LikesModel)
-
-        if (!likeStatus.includes(req.body.likeStatus as LikesModel)) { // TODO ??? Просто принудительно типизировал
-            return res.sendStatus(400)
-        }
-
         const comment = await this.commentsService.giveCommentById(req.params.id)
 
         if (!comment) {
@@ -49,9 +52,9 @@ export class CommentsController {
         }
 
         await this.commentsService.updateLikesInfo(req.user!.id, req.params.id, req.body.likeStatus)
+
+        return res.sendStatus(204)
     }
-
-
 
     async deleteCommentByCommentId(req: RequestWithParams<URIParameters>,
                                    res: Response) {

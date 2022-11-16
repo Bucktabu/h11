@@ -8,7 +8,7 @@ import {UserAccountConstructor} from "../types/userAccount-constructor";
 import {_generateHash} from "../helperFunctions";
 import {UserDBConstructor} from "../types/user-constructor";
 import {EmailConfirmationConstructor} from "../types/emailConfirmation-constructor";
-import {UserLikesConstructor} from "../types/userLiked-constructor";
+import {UserLikeStatusConstructor} from "../types/userLikeStatus-constructor";
 
 export class AuthService {
     constructor(protected usersRepository: UsersRepository) {}

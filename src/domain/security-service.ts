@@ -2,7 +2,7 @@ import UserAgent from "user-agents";
 import {JWTService} from "../application/jws-service";
 import {SecurityRepository} from "../repositories/security-repository";
 import {DeviceSecurityConstructor} from "../types/deviceSecurity-constructor";
-import {activeSessionsOutputType} from "../dataMapping/toActiveSessionsOutputType";
+import {activeSessionsOutputType} from "../dataMapping/toActiveSessionsOutputData";
 import {UserDeviceConstructor} from "../types/user-device-type";
 
 export class SecurityService {

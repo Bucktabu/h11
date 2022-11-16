@@ -50,10 +50,10 @@ export class PostsController {
                                   res: Response<ContentPageConstructor>) {
         const pageWithComments: ContentPageConstructor | null = await this.commentsService
             .giveCommentsPage(req.query.sortBy,
-                req.query.sortDirection,
-                req.query.pageNumber,
-                req.query.pageSize,
-                req.params.id)
+                              req.query.sortDirection,
+                              req.query.pageNumber,
+                              req.query.pageSize,
+                              req.params.id)
 
         if (!pageWithComments) {
             return res.sendStatus(404)

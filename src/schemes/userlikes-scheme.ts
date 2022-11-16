@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import {UserLikesConstructor} from "../types/userLiked-constructor";
+import {UserLikeStatusConstructor} from "../types/userLikeStatus-constructor";
 
-const userLikesScheme = new mongoose.Schema<UserLikesConstructor>({
+const userLikesScheme = new mongoose.Schema<UserLikeStatusConstructor>({
     userId: {type: String, required: true},
     commentId: {type: String, required: true},
     likeStatus: {type: String, required: true}

@@ -5,7 +5,7 @@ import {ContentPageConstructor} from "../types/contentPage-constructor";
 import {UserDBConstructor, UserConstructor} from "../types/user-constructor";
 import {paginationContentPage} from "../paginationContentPage";
 import {_generateHash} from "../helperFunctions";
-import {userDBtoUser, usersOutputType} from "../dataMapping/toUserOutputType";
+import {userDBtoUser, usersOutputType} from "../dataMapping/toUserOutputData";
 import {AuthService} from "./auth-service";
 
 export class UsersService {

@@ -5,7 +5,7 @@ import {ContentPageConstructor} from "../types/contentPage-constructor";
 import {LikesInfoConstructor} from "../types/likesInfo-constructor";
 import {UserDBConstructor} from "../types/user-constructor";
 import {paginationContentPage} from "../paginationContentPage";
-import {commentOutputType} from "../dataMapping/toCommentOutputType";
+import {commentOutputType} from "../dataMapping/toCommentOutputData";
 import {LikesInfoRepository} from "../repositories/likesInfo-repository";
 import {UserLikesRepository} from "../repositories/userLikes-repositiry";
 
@@ -55,50 +55,58 @@ export class CommentsService {
             return null
         }
 
-        return comment
+        return commentOutputType(comment)
     }
 
     async giveCommentsPage(sortBy: string,
                            sortDirection: 'asc' | 'desc',
                            pageNumber: string,
                            pageSize: string,
-                           userId: string): Promise<ContentPageConstructor | null> {
+                           postId: string): Promise<ContentPageConstructor | null> {
 
-        const commentsDB = await this.commentsRepository.giveComments(sortBy, sortDirection, pageNumber, pageSize, userId)
+        const commentsDB = await this.commentsRepository.giveComments(sortBy, sortDirection, pageNumber, pageSize, postId)
 
         if (!commentsDB!.length) {
             return null
         }
 
         const comments = commentsDB!.map(c => commentOutputType(c))
-        const totalCount = await this.commentsRepository.giveTotalCount(userId)
+        const totalCount = await this.commentsRepository.giveTotalCount(postId)
 
         return paginationContentPage(pageNumber, pageSize, comments, totalCount)
     }
 
-    async updateLikesInfo(userId: string, commentId: string, status: string) {
-        const commentLiked = await this.userLikesRepository.checkUserLike(userId, commentId)
+    async giveComment(commentId: string) {
+        return this.commentsRepository.giveCommentById(commentId)
+    }
 
-        if (!commentLiked) {
-            await this.userLikesRepository.addUserLike(userId, commentId, status)
+    async updateLikesInfo(userId: string, commentId: string, likeStatus: string) {
+        const commentReacted = await this.userLikesRepository.giveUserLike(userId, commentId)
+
+        if (!commentReacted) {
+            await this.userLikesRepository.addUserReact(userId, commentId, likeStatus)
         }
 
-        if (status === 'None') {
-            await this.userLikesRepository.updateUserLikeStatus(userId, status)
+        if (likeStatus === 'None') {
+            await this.userLikesRepository.updateUserLikeStatus(userId, likeStatus)
 
             let field = 'dislikesCount'
-            if (commentLiked!.likeStatus === 'Like') {
+            if (commentReacted!.likeStatus === 'Like') {
                 field = 'likesCount'
             }
 
             await this.likesInfoRepository.removeLikeOrDislike(commentId, field)
-        }
-        let field = 'dislikesCount'
-        if (status === 'Like') {
-            field = 'likesCount'
+        } else {
+            let field = 'dislikesCount'
+            if (likeStatus === 'Like') {
+                field = 'likesCount'
+            }
+
+            await this.likesInfoRepository.updateLikeOrDislikeCount(commentId, field)
+
+            return true
         }
 
-        await this.likesInfoRepository.updateLikeOrDislikeCount(commentId, field)
     } // TODO остановился здесь
 
     async deleteCommentById(commentId: string): Promise<boolean> {

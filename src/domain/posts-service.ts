@@ -4,7 +4,7 @@ import {PostConstructor} from "../types/posts-constructor";
 import {ContentPageConstructor} from "../types/contentPage-constructor";
 
 import {paginationContentPage} from "../paginationContentPage";
-import {postOutputType} from "../dataMapping/toPostOutputType";
+import {postOutputType} from "../dataMapping/toPostOutputData";
 
 export class PostsService {
     constructor(protected postsRepository: PostsRepository,
