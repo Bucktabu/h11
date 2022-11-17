@@ -105,7 +105,7 @@ export class CommentsService {
         const tokenPayload = await this.jwtService.giveTokenPayload(accessToken)
 
         return await commentOutputDataForAuthorisationUser(commentDB, tokenPayload.userId)
-    } // TODO ??? получаю [object Promise]
+    }
 
     async updateLikesInfo(userId: string, commentId: string, likeStatus: string) {
         const commentReacted = await this.userLikesRepository.giveUserLike(userId, commentId)
@@ -119,6 +119,8 @@ export class CommentsService {
 
                 return await this.likesInfoRepository.removeLikeOrDislike(commentId, field)
             }
+
+            await this.userLikesRepository.updateUserLikeStatus(userId, likeStatus)
         } else {
             await this.userLikesRepository.addUserReact({userId, commentId, likeStatus})
         }
@@ -129,36 +131,6 @@ export class CommentsService {
         }
 
         return await this.likesInfoRepository.updateLikeOrDislikeCount(commentId, field)
-
-
-        // if (!commentReacted) {
-        //     await this.userLikesRepository.addUserReact({userId, commentId, likeStatus})
-        //
-        //     let field = 'dislikesCount'
-        //     if (likeStatus === 'Like') {
-        //         field = 'likesCount'
-        //     }
-        //
-        //     return await this.likesInfoRepository.updateLikeOrDislikeCount(commentId, field)
-        // } else {
-        //     if (likeStatus === 'None') {
-        //         let field = 'dislikesCount'
-        //         if (commentReacted.likeStatus === 'Like') {
-        //             field = 'likesCount'
-        //         }
-        //
-        //         await this.likesInfoRepository.removeLikeOrDislike(commentId, field)
-        //     } else {
-        //         let field = 'dislikesCount'
-        //         if (likeStatus === 'Like') {
-        //             field = 'likesCount'
-        //         }
-        //
-        //         await this.likesInfoRepository.updateLikeOrDislikeCount(commentId, field)
-        //     }
-        //
-        //     return true
-        // }
     }
 
     async deleteCommentById(commentId: string): Promise<boolean> {
