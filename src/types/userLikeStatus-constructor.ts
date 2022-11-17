@@ -1,12 +1,12 @@
 export class UserLikeStatusConstructor {
     constructor(
-        public userId: string,
-        public commentId: string,
-        public likeStatus: string
+        public userID: string,
+        public commentID: string,
+        public likeStatuses: string
     ) {
-        this.userId = userId;
-        this.likeStatus = likeStatus;
-        this.commentId = commentId
+        this.userId = userID;
+        this.likeStatus = likeStatuses;
+        this.commentId = commentID
     }
 
     userId = ''
