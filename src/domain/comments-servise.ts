@@ -113,28 +113,34 @@ export class CommentsService {
         let reaction = likeStatus
         if (!commentReacted) {
             await this.userLikesRepository.addUserReact({userId, commentId, likeStatus})
-        } else {
-            await this.userLikesRepository.updateUserLikeStatus(userId, likeStatus)
-            reaction = commentReacted.likeStatus
-        }
 
-        if (likeStatus === 'None') {
-            let field = 'dislikesCount'
-            if (reaction === 'Like') {
-                field = 'likesCount'
-            }
-
-            await this.likesInfoRepository.removeLikeOrDislike(commentId, field)
-        } else {
             let field = 'dislikesCount'
             if (likeStatus === 'Like') {
                 field = 'likesCount'
             }
 
-            await this.likesInfoRepository.updateLikeOrDislikeCount(commentId, field)
-        }
+            return await this.likesInfoRepository.updateLikeOrDislikeCount(commentId, field)
+        } else {
+            reaction = commentReacted.likeStatus
 
-        return true
+            if (likeStatus === 'None') {
+                let field = 'dislikesCount'
+                if (reaction === 'Like') {
+                    field = 'likesCount'
+                }
+
+                await this.likesInfoRepository.removeLikeOrDislike(commentId, field)
+            } else {
+                let field = 'dislikesCount'
+                if (likeStatus === 'Like') {
+                    field = 'likesCount'
+                }
+
+                await this.likesInfoRepository.updateLikeOrDislikeCount(commentId, field)
+            }
+
+            return true
+        }
     }
 
     async deleteCommentById(commentId: string): Promise<boolean> {
