@@ -112,6 +112,7 @@ export class CommentsService {
         console.log('commentReacted: ' + commentReacted)
         if (!commentReacted) {
             await this.userLikesRepository.addUserReact({userId, commentId, likeStatus})
+            return true
         }
 
         if (likeStatus === 'None') {
