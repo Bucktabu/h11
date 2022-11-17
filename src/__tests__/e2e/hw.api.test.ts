@@ -91,14 +91,27 @@ describe('/posts', () => {
             .set({Authorization: `Bearer ${userLikedComment.body.accessToken}`})
             .expect(204)
 
-        const checkReactionIsUpdated = await request(app)
+        const checkReactionNotAuthUser = await request(app)
             .get(`/comments/${createComment.body.id}`)
             .expect(200)
 
-        const response = JSON.parse(checkReactionIsUpdated.text)
+        const responseForNotAuthUser = JSON.parse(checkReactionNotAuthUser.text)
 
-        expect(response.likesInfo.myStatus).toEqual('None')
+        expect(responseForNotAuthUser.likesInfo.myStatus).toEqual('None')
+        expect(responseForNotAuthUser.likesInfo.likesCount).toEqual(1)
+
+        const checkReactionAuthUser = await request(app)
+            .get(`/comments/${createComment.body.id}`)
+            .set({Authorization: `Bearer ${userLikedComment.body.accessToken}`})
+            .expect(200)
+
+        const responseForAuthUser = JSON.parse(checkReactionAuthUser.text)
+
+        expect(responseForAuthUser.likesInfo.myStatus).toEqual('Like')
+        expect(responseForAuthUser.likesInfo.likesCount).toEqual(1)
     })
+
+    it('')
 })
 /// Blogs router test
 //

@@ -86,21 +86,22 @@ export class CommentsService {
         return this.commentsRepository.giveCommentById(commentId)
     }
 
-    async giveCommentOutputModel(accessToken: string, commentDB: CommentBDConstructor) {
-        if (!accessToken) {
+    async giveCommentOutputModel(token: string, commentDB: CommentBDConstructor) {
+        if (!token) {
             return await commentOutputDataForNotAuthorisationUser(commentDB)
         }
 
+        const accessToken = (token.split(' '))[1]
         const tokenPayload = await this.jwtService.giveTokenPayload(accessToken)
 
         return await commentOutputDataForAuthorisationUser(commentDB, tokenPayload.userId)
     } // TODO ??? получаю [object Promise]
 
-    async updateLikesInfo(userId: string, commentId: string, likeStatus: string) {
+    async updateLikesInfo(userId: string, commentId: string, likeStatus: 'None' | 'Like' | 'Dislike') {
         const commentReacted = await this.userLikesRepository.giveUserLike(userId, commentId)
 
         if (!commentReacted) {
-            await this.userLikesRepository.addUserReact(userId, commentId, likeStatus)
+            await this.userLikesRepository.addUserReact({userId, commentId, likeStatus})
         }
 
         if (likeStatus === 'None') {

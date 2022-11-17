@@ -4,7 +4,6 @@ import {UsersService} from "../domain/users-service";
 import {URIParameters} from "../models/URIParameters";
 import {CommentConstructor} from "../types/comment-constructor";
 import {RequestWithParams, RequestWithParamsAndBody} from "../types/request-types";
-import {JWTService} from "../application/jws-service";
 import {LikeStatusConstructor} from "../types/likeStatus-constructor";
 
 
@@ -19,8 +18,8 @@ export class CommentsController {
         if (!commentDB) {
             return res.sendStatus(404)
         }
-
-        const comment = await this.commentsService.giveCommentOutputModel(req.headers.accessToken as string, commentDB)
+        console.log(req.headers)
+        const comment = await this.commentsService.giveCommentOutputModel(req.headers.authorization as string, commentDB)
         console.log('-----> comment from commentController 25: ' + comment) // [object Object]
         return res.status(200).send(comment)
     }
@@ -45,7 +44,7 @@ export class CommentsController {
             res.sendStatus(404)
         }
 
-        await this.commentsService.updateLikesInfo(req.user!.id, req.params.id, req.body.likeStatus)
+        await this.commentsService.updateLikesInfo(req.user!.id, req.params.id, req.body.likeStatus as "None" | "Like" | "Dislike")
 
         return res.sendStatus(204)
     }

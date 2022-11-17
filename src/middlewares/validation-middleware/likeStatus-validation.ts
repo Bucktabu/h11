@@ -5,7 +5,7 @@ export const likeStatusValidation = body('likeStatus').isString().trim()
     .custom(async (likeStatus) => {
         const likeStatusModel = Object.values(LikesModel)
 
-        if (!likeStatusModel.includes(likeStatus as LikesModel)) { // TODO ??? Просто принудительно типизировал
+        if (!likeStatusModel.includes(likeStatus as LikesModel)) {
             throw new Error('Incorrect input data')
         }
 

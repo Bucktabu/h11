@@ -54,7 +54,7 @@ export const authController = new AuthController(
     securityService,
     usersService)
 export const blogsController = new BlogsController(blogsService, postsService)
-export const commentController = new CommentsController(commentsService, jwtService, usersService)
+export const commentController = new CommentsController(commentsService, usersService)
 export const postController = new PostsController(postsService, commentsService)
 export const securityController = new SecurityController(securityService)
 export const testingController = new TestingController(
