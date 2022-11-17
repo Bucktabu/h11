@@ -7,10 +7,10 @@ export class UserLikesRepository {
             .findOne({$and: [{userId}, {commentId}]})
     }
 
-    async addUserReact(userReaction: UserLikeStatusConstructor): Promise<boolean> {
+    async addUserReact(userReaction: UserLikeStatusConstructor) {
         try {
             await UserLikesScheme.create(userReaction)
-            return true
+            return userReaction
         } catch (e) {
             return false
         }

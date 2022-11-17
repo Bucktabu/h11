@@ -109,17 +109,18 @@ export class CommentsService {
 
     async updateLikesInfo(userId: string, commentId: string, likeStatus: string) {
         const commentReacted = await this.userLikesRepository.giveUserLike(userId, commentId)
-        console.log('commentReacted: ' + commentReacted)
+
+        let reaction = likeStatus
         if (!commentReacted) {
             await this.userLikesRepository.addUserReact({userId, commentId, likeStatus})
-            return true
+        } else {
+            await this.userLikesRepository.updateUserLikeStatus(userId, likeStatus)
+            reaction = commentReacted.likeStatus
         }
 
         if (likeStatus === 'None') {
-            await this.userLikesRepository.updateUserLikeStatus(userId, likeStatus)
-
             let field = 'dislikesCount'
-            if (commentReacted!.likeStatus === 'Like') {
+            if (reaction === 'Like') {
                 field = 'likesCount'
             }
 
@@ -130,10 +131,8 @@ export class CommentsService {
                 field = 'likesCount'
             }
 
-            await this.userLikesRepository.updateUserLikeStatus(userId, likeStatus)
             await this.likesInfoRepository.updateLikeOrDislikeCount(commentId, field)
         }
-
 
         return true
     }
