@@ -11,7 +11,7 @@ import {UserLikesRepository} from "../repositories/userLikes-repositiry";
 import {commentOutputDataForNotAuthorisationUser} from "../dataMapping/getCommentForNotAuthUserOutputData";
 import {JWTService} from "../application/jws-service";
 import {commentOutputDataForAuthorisationUser} from "../dataMapping/commentOutputDataForAuthorisationUser";
-import {randomUUID} from "crypto";
+import {UserLikeStatusConstructor} from "../types/userLikeStatus-constructor";
 
 export class CommentsService {
     constructor(protected jwtService: JWTService,
@@ -122,7 +122,8 @@ export class CommentsService {
 
             await this.userLikesRepository.updateUserLikeStatus(userId, likeStatus)
         } else {
-            await this.userLikesRepository.addUserReact({userId, commentId, likeStatus})
+            let newComment = new UserLikeStatusConstructor(userId, commentId, likeStatus)
+            await this.userLikesRepository.addUserReact(newComment)
         }
 
         let field = 'dislikesCount'
