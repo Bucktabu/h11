@@ -109,7 +109,7 @@ export class CommentsService {
 
     async updateLikesInfo(userId: string, commentId: string, likeStatus: string) {
         const commentReacted = await this.userLikesRepository.giveUserLike(userId, commentId)
-
+        console.log('commentReacted: ' + commentReacted)
         if (!commentReacted) {
             await this.userLikesRepository.addUserReact({userId, commentId, likeStatus})
         }
