@@ -40,7 +40,7 @@ export class CommentsController {
         const comment = await this.commentsService.giveCommentById(req.params.id)
 
         if (!comment) {
-            res.sendStatus(404)
+            return res.sendStatus(404)
         }
 
         await this.commentsService.updateLikesInfo(req.user!.id, req.params.id, req.body.likeStatus)
