@@ -18,7 +18,7 @@ export class UserLikesRepository {
 
     async updateUserLikeStatus(userId: string, likeStatus: string): Promise<boolean> {
         const result = await UserLikesScheme
-            .updateOne({userId}, {$set: {myStatus: likeStatus}})
+            .updateOne({userId}, {$set: {likeStatus}})
 
         return result.matchedCount === 1
     }

@@ -81,13 +81,14 @@ export class CommentsService {
         if (!token) {
             comments = commentsDB!.map(async c => await commentOutputDataForNotAuthorisationUser(c))
         } else {
-            const tokenPayload = await this.jwtService.giveTokenPayload(token)
+            const accessToken = (token.split(' '))[1]
+            const tokenPayload = await this.jwtService.giveTokenPayload(accessToken)
             comments = commentsDB!.map(async c => await commentOutputDataForAuthorisationUser(c, tokenPayload.userId))
         }
 
         const totalCount = await this.commentsRepository.giveTotalCount(postId)
 
-        // @ts-ignore
+        // @ts-ignore TODO ???
         return paginationContentPage(pageNumber, pageSize, comments, totalCount)
     }
 
@@ -115,7 +116,7 @@ export class CommentsService {
 
         if (likeStatus === 'None') {
             await this.userLikesRepository.updateUserLikeStatus(userId, likeStatus)
-            console.log('-----> ' + commentReacted)
+
             let field = 'dislikesCount'
             if (commentReacted!.likeStatus === 'Like') {
                 field = 'likesCount'
@@ -128,8 +129,10 @@ export class CommentsService {
                 field = 'likesCount'
             }
 
+            await this.userLikesRepository.updateUserLikeStatus(userId, likeStatus)
             await this.likesInfoRepository.updateLikeOrDislikeCount(commentId, field)
         }
+
 
         return true
     }

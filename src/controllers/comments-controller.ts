@@ -18,9 +18,8 @@ export class CommentsController {
         if (!commentDB) {
             return res.sendStatus(404)
         }
-        console.log(req.headers)
+
         const comment = await this.commentsService.giveCommentOutputModel(req.headers.authorization as string, commentDB)
-        console.log('-----> comment from commentController 25: ' + comment) // [object Object]
         return res.status(200).send(comment)
     }
 
