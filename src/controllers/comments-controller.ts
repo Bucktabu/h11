@@ -44,7 +44,7 @@ export class CommentsController {
             res.sendStatus(404)
         }
 
-        await this.commentsService.updateLikesInfo(req.user!.id, req.params.id, req.body.likeStatus as "None" | "Like" | "Dislike")
+        await this.commentsService.updateLikesInfo(req.user!.id, req.params.id, req.body.likeStatus)
 
         return res.sendStatus(204)
     }

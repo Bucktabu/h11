@@ -1,4 +1,4 @@
-import {LikesInfoConstructor, LikesInfoOutputConstructor} from "./likesInfo-constructor";
+import {LikesInfoOutputConstructor} from "./likesInfo-constructor";
 
 export class CommentConstructor {
     constructor(
@@ -23,3 +23,5 @@ export class CommentBDConstructor {
         public postId?: string
     ) {}
 }
+
+export type CommentsBDType = CommentBDConstructor[]

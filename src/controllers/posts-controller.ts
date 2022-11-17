@@ -53,7 +53,8 @@ export class PostsController {
                               req.query.sortDirection,
                               req.query.pageNumber,
                               req.query.pageSize,
-                              req.params.id)
+                              req.params.id,
+                              req.headers.authorization)
 
         if (!pageWithComments) {
             return res.sendStatus(404)

@@ -68,7 +68,8 @@ export class CommentsService {
                            sortDirection: 'asc' | 'desc',
                            pageNumber: string,
                            pageSize: string,
-                           postId: string): Promise<ContentPageConstructor | null> {
+                           postId: string,
+                           token?: string): Promise<ContentPageConstructor | null> {
 
         const commentsDB = await this.commentsRepository.giveComments(sortBy, sortDirection, pageNumber, pageSize, postId)
 
@@ -76,9 +77,17 @@ export class CommentsService {
             return null
         }
 
-        const comments = commentsDB!.map(c => commentOutputType(c))
+        let comments
+        if (!token) {
+            comments = commentsDB!.map(async c => await commentOutputDataForNotAuthorisationUser(c))
+        } else {
+            const tokenPayload = await this.jwtService.giveTokenPayload(token)
+            comments = commentsDB!.map(async c => await commentOutputDataForAuthorisationUser(c, tokenPayload.userId))
+        }
+
         const totalCount = await this.commentsRepository.giveTotalCount(postId)
 
+        // @ts-ignore
         return paginationContentPage(pageNumber, pageSize, comments, totalCount)
     }
 
@@ -97,7 +106,7 @@ export class CommentsService {
         return await commentOutputDataForAuthorisationUser(commentDB, tokenPayload.userId)
     } // TODO ??? получаю [object Promise]
 
-    async updateLikesInfo(userId: string, commentId: string, likeStatus: 'None' | 'Like' | 'Dislike') {
+    async updateLikesInfo(userId: string, commentId: string, likeStatus: string) {
         const commentReacted = await this.userLikesRepository.giveUserLike(userId, commentId)
 
         if (!commentReacted) {
