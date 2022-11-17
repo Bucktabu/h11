@@ -66,7 +66,7 @@ export class BlogsController {
 
     async createBlog(req: RequestWithBody<BlogsCreateNewBlog>, res: Response<BlogConstructor>) {
         const newBlog = await this.blogsService.createNewBlog(req.body.name, req.body.youtubeUrl)
-
+        console.log('1', newBlog)
         if (!newBlog) {
             return res.sendStatus(404)
         }

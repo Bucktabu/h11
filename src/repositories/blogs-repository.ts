@@ -8,6 +8,7 @@ export class BlogsRepository {
             await BlogSchema.create(newBlog)
             return newBlog
         } catch (e) {
+            console.log('3', e)
             return null
         }
     }

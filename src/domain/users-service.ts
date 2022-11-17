@@ -18,7 +18,12 @@ export class UsersService {
 
     async createNewUser(login: string, password: string, email: string): Promise<UserConstructor | null> {
         const userAccount = await this.authService.createUser(login, password, email)
-        return usersOutputType(userAccount!.accountData)
+
+        if (!userAccount){
+            return null
+        }
+
+        return usersOutputType(userAccount.accountData)
     }
 
     async giveUserByIdOrLoginOrEmail(IdOrLoginOrEmail: string): Promise<UserDBConstructor | null> {

@@ -17,7 +17,7 @@ export class BlogsService {
         )
 
         const createdBlog = await this.blogsRepository.createNewBlog(newBlog)
-
+        console.log('2', createdBlog)
         if (!createdBlog) {
             return null
         }
