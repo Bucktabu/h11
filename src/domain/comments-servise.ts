@@ -106,7 +106,7 @@ export class CommentsService {
 
         if (likeStatus === 'None') {
             await this.userLikesRepository.updateUserLikeStatus(userId, likeStatus)
-
+            console.log('-----> ' + commentReacted)
             let field = 'dislikesCount'
             if (commentReacted!.likeStatus === 'Like') {
                 field = 'likesCount'
