@@ -145,10 +145,16 @@ export class CommentsService {
             return false
         }
 
-        return await this.userLikesRepository.deleteUserReaction(userId)
-    }
+        if (likeStatus === 'None') {
+            return await this.userLikesRepository.deleteUserReaction(userId)
+        }
 
-    async deleteCommentById(commentId: string): Promise<boolean> {
-        return await this.commentsRepository.deleteCommentById(commentId)
+        const isUpdated = await this.likesInfoRepository.updateLikeOrDislikeCount(commentId, field)
+
+        if (!isUpdated) {
+            return false
+        }
+
+        return this.userLikesRepository.updateUserLikeStatus(userId, likeStatus)
     }
 }
