@@ -157,4 +157,8 @@ export class CommentsService {
 
         return this.userLikesRepository.updateUserLikeStatus(userId, likeStatus)
     }
+
+    async deleteCommentById(commentId: string): Promise<boolean> {
+        return await this.commentsRepository.deleteCommentById(commentId)
+    }
 }
