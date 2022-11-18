@@ -3,7 +3,7 @@ import {CommentBDConstructor} from "../types/comment-constructor";
 
 export const commentOutputDataForAuthorisationUser = async (comment: CommentBDConstructor, userId: string): Promise<CommentBDConstructor> => {
     const userReaction = await userLikesRepository.giveUserLike(userId, comment.id)
-
+    console.log('---> likeStatus from bd : ' + userReaction?.likeStatus)
     let reaction = 'None'
     if (userReaction) {
         reaction = userReaction.likeStatus

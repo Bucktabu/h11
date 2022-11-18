@@ -1,18 +1,17 @@
 import {v4 as uuidv4} from 'uuid';
+import {JWTService} from "../application/jws-service";
 import {CommentsRepository} from "../repositories/comments-repository";
+import {LikesInfoRepository} from "../repositories/likesInfo-repository";
+import {UserLikesRepository} from "../repositories/userLikes-repositiry";
 import {CommentBDConstructor, CommentConstructor} from "../types/comment-constructor";
 import {ContentPageConstructor} from "../types/contentPage-constructor";
 import {LikesInfoConstructor} from "../types/likesInfo-constructor";
 import {UserDBConstructor} from "../types/user-constructor";
-import {paginationContentPage} from "../paginationContentPage";
-import {commentOutputType} from "../dataMapping/toCommentOutputData";
-import {LikesInfoRepository} from "../repositories/likesInfo-repository";
-import {UserLikesRepository} from "../repositories/userLikes-repositiry";
-import {commentOutputDataForNotAuthorisationUser} from "../dataMapping/getCommentForNotAuthUserOutputData";
-import {JWTService} from "../application/jws-service";
-import {commentOutputDataForAuthorisationUser} from "../dataMapping/commentOutputDataForAuthorisationUser";
 import {UserLikeStatusConstructor} from "../types/userLikeStatus-constructor";
+import {paginationContentPage} from "../paginationContentPage";
 import {commentOutputData} from "../helperFunctions";
+import {commentOutputDataForAuthorisationUser} from "../dataMapping/commentOutputDataForAuthorisationUser";
+import {commentOutputDataForNotAuthorisationUser} from "../dataMapping/getCommentForNotAuthUserOutputData";
 
 export class CommentsService {
     constructor(protected jwtService: JWTService,
@@ -95,7 +94,7 @@ export class CommentsService {
 
     async updateLikesInfo(userId: string, commentId: string, likeStatus: string): Promise<boolean> {
         const isReacted = await this.userLikesRepository.giveUserLike(userId, commentId)
-
+        console.log('---> likeStatus from body: ' + likeStatus)
         if (!isReacted) {
             if (likeStatus === 'None') {
                 return true
@@ -145,7 +144,7 @@ export class CommentsService {
         if (!isUpdated) {
             return false
         }
-        console.log('likeStatus: ' + likeStatus)
+
         return this.userLikesRepository.updateUserLikeStatus(userId, likeStatus)
     }
 

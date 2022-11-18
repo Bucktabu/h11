@@ -1,7 +1,6 @@
 import {Response} from "express";
 import {CommentsService} from "../domain/comments-servise";
 import {PostsService} from "../domain/posts-service";
-import {CommentConstructor} from "../types/comment-constructor";
 import {ContentPageConstructor} from "../types/contentPage-constructor";
 import {PostConstructor} from "../types/posts-constructor";
 import {RequestWithBody,
