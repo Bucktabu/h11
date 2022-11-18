@@ -12,6 +12,7 @@ import {commentOutputDataForNotAuthorisationUser} from "../dataMapping/getCommen
 import {JWTService} from "../application/jws-service";
 import {commentOutputDataForAuthorisationUser} from "../dataMapping/commentOutputDataForAuthorisationUser";
 import {UserLikeStatusConstructor} from "../types/userLikeStatus-constructor";
+import {commentOutputData} from "../helperFunctions";
 
 export class CommentsService {
     constructor(protected jwtService: JWTService,
@@ -53,7 +54,7 @@ export class CommentsService {
         return await this.commentsRepository.updateComment(commentId, comment)
     }
 
-    async giveCommentById(commentId: string): Promise<CommentConstructor | null> {
+    async giveCommentById(commentId: string, token?: string): Promise<CommentConstructor | null> {
 
         const comment = await this.commentsRepository.giveCommentById(commentId)
 
@@ -61,7 +62,7 @@ export class CommentsService {
             return null
         }
 
-        return commentOutputType(comment)
+        return commentOutputData(comment, token)
     }
 
     async giveCommentsPage(sortBy: string,
@@ -90,21 +91,6 @@ export class CommentsService {
 
         // @ts-ignore
         return paginationContentPage(pageNumber, pageSize, comments, totalCount)
-    }
-
-    async giveComment(commentId: string) {
-        return this.commentsRepository.giveCommentById(commentId)
-    }
-
-    async giveCommentOutputModel(token: string, commentDB: CommentBDConstructor) {
-        if (!token) {
-            return await commentOutputDataForNotAuthorisationUser(commentDB)
-        }
-
-        const accessToken = (token.split(' '))[1]
-        const tokenPayload = await this.jwtService.giveTokenPayload(accessToken)
-
-        return await commentOutputDataForAuthorisationUser(commentDB, tokenPayload.userId)
     }
 
     async updateLikesInfo(userId: string, commentId: string, likeStatus: string): Promise<boolean> {
@@ -149,12 +135,17 @@ export class CommentsService {
             return await this.userLikesRepository.deleteUserReaction(userId)
         }
 
-        const isUpdated = await this.likesInfoRepository.updateLikeOrDislikeCount(commentId, field)
+        let field2 = 'dislikesCount'
+        if (likeStatus === 'Like') {
+            field2 = 'likesCount'
+        }
+
+        const isUpdated = await this.likesInfoRepository.updateLikeOrDislikeCount(commentId, field2)
 
         if (!isUpdated) {
             return false
         }
-
+        console.log('likeStatus: ' + likeStatus)
         return this.userLikesRepository.updateUserLikeStatus(userId, likeStatus)
     }
 

@@ -1,5 +1,5 @@
 import {likesInfoRepository, userLikesRepository} from "../composition-root";
-import {CommentBDConstructor, CommentsBDType} from "../types/comment-constructor";
+import {CommentBDConstructor} from "../types/comment-constructor";
 
 export const commentOutputDataForAuthorisationUser = async (comment: CommentBDConstructor, userId: string): Promise<CommentBDConstructor> => {
     const userReaction = await userLikesRepository.giveUserLike(userId, comment.id)

@@ -13,13 +13,12 @@ export class CommentsController {
 
     async getCommentByCommentId(req: RequestWithParams<URIParameters>,
                                 res: Response) {
-        const commentDB = await this.commentsService.giveComment(req.params.id)
+        const comment = await this.commentsService.giveCommentById(req.params.id, req.headers.authorization)
 
-        if (!commentDB) {
+        if (!comment) {
             return res.sendStatus(404)
         }
 
-        const comment = await this.commentsService.giveCommentOutputModel(req.headers.authorization as string, commentDB)
         return res.status(200).send(comment)
     }
 
