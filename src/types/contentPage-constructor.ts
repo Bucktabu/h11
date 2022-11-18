@@ -9,6 +9,6 @@ export class ContentPageConstructor {
         public page: number,
         public pageSize: number,
         public totalCount: number,
-        public items: BlogsConstructor | PostsConstructor | UsersType | CommentsBDType
+        public items: BlogsConstructor | PostsConstructor | UsersType | CommentBDConstructor[]
     ) {}
 }

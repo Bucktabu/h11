@@ -70,7 +70,7 @@ export class CommentsService {
                            pageSize: string,
                            postId: string,
                            token?: string): Promise<ContentPageConstructor | null> {
-
+        console.log(sortBy, sortDirection, pageNumber, pageSize, postId)
         const commentsDB = await this.commentsRepository.giveComments(sortBy, sortDirection, pageNumber, pageSize, postId)
 
         if (!commentsDB!.length) {
@@ -88,7 +88,7 @@ export class CommentsService {
 
         const totalCount = await this.commentsRepository.giveTotalCount(postId)
 
-        // @ts-ignore TODO ???
+        // @ts-ignore
         return paginationContentPage(pageNumber, pageSize, comments, totalCount)
     }
 
@@ -107,31 +107,45 @@ export class CommentsService {
         return await commentOutputDataForAuthorisationUser(commentDB, tokenPayload.userId)
     }
 
-    async updateLikesInfo(userId: string, commentId: string, likeStatus: string) {
-        const commentReacted = await this.userLikesRepository.giveUserLike(userId, commentId)
+    async updateLikesInfo(userId: string, commentId: string, likeStatus: string): Promise<boolean> {
+        const isReacted = await this.userLikesRepository.giveUserLike(userId, commentId)
 
-        if (commentReacted) {
+        if (!isReacted) {
             if (likeStatus === 'None') {
-                let field = 'dislikesCount'
-                if (commentReacted.likeStatus === 'Like') {
-                    field = 'likesCount'
-                }
-
-                return await this.likesInfoRepository.removeLikeOrDislike(commentId, field)
+                return true
             }
 
-            await this.userLikesRepository.updateUserLikeStatus(userId, likeStatus)
-        } else {
             let newComment = new UserLikeStatusConstructor(userId, commentId, likeStatus)
-            await this.userLikesRepository.addUserReact(newComment)
+            const newReact = await this.userLikesRepository.addUserReact(newComment)
+
+            if (!newReact) {
+                return false
+            }
+
+            let field = 'dislikesCount'
+            if (likeStatus === 'Like') {
+                field = 'likesCount'
+            }
+
+            return await this.likesInfoRepository.updateLikeOrDislikeCount(commentId, field)
+        }
+
+        if (isReacted.likeStatus === likeStatus) {
+            return true
         }
 
         let field = 'dislikesCount'
-        if (likeStatus === 'Like') {
+        if (isReacted.likeStatus === 'Like') {
             field = 'likesCount'
         }
 
-        return await this.likesInfoRepository.updateLikeOrDislikeCount(commentId, field)
+        const likeIsRemoved = await this.likesInfoRepository.removeLikeOrDislike(commentId, field)
+
+        if (!likeIsRemoved) {
+            return false
+        }
+
+        return await this.userLikesRepository.deleteUserReaction(userId)
     }
 
     async deleteCommentById(commentId: string): Promise<boolean> {

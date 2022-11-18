@@ -1,7 +1,7 @@
-import {CommentBDConstructor} from "../types/comment-constructor";
+import {CommentBDConstructor, CommentsBDType} from "../types/comment-constructor";
 import {likesInfoRepository} from "../composition-root";
 
-export const commentOutputDataForNotAuthorisationUser = async (comment: CommentBDConstructor) => {
+export const commentOutputDataForNotAuthorisationUser = async (comment: CommentBDConstructor): Promise<CommentBDConstructor> => {
     const likeInfo = await likesInfoRepository.giveLikeInfo(comment.id)
 
     return {

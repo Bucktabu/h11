@@ -6,7 +6,7 @@ import {CommentBDConstructor, CommentsBDType, CommentsType} from "./types/commen
 
 export const paginationContentPage = (pageNumber: string,
                                       pageSize: string,
-                                      content: BlogsConstructor | PostsConstructor | UsersType | CommentsBDType,
+                                      content: BlogsConstructor | PostsConstructor | UsersType | CommentBDConstructor[],
                                       totalCount: number) => {
 
     return {

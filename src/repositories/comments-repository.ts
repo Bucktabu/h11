@@ -42,8 +42,8 @@ export class CommentsRepository {
             .lean()
     }
 
-    async giveTotalCount(postId: string | undefined): Promise<number> {
-        return CommentsSchema.countDocuments({postId: postId})
+    async giveTotalCount(postId: string): Promise<number> {
+        return CommentsSchema.countDocuments({postId})
     }
 
     async deleteCommentById(commentId: string): Promise<boolean> {

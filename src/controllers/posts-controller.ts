@@ -60,7 +60,7 @@ export class PostsController {
             return res.sendStatus(404)
         }
 
-        res.status(200).send(pageWithComments)
+        return res.status(200).send(pageWithComments)
     }
 
     async createPost(req: RequestWithBody<PostsCreateNewPost>,
@@ -107,7 +107,7 @@ export class PostsController {
         }
 
         const post = await this.postsService.givePostById(req.params.id)
-        res.status(204).send(post)
+        return res.status(204).send(post)
     }
 
     async deletePostByPostId(req: RequestWithParams<URIParameters>,
@@ -118,6 +118,6 @@ export class PostsController {
             return res.sendStatus(204)
         }
 
-        res.sendStatus(404)
+        return res.sendStatus(404)
     }
 }
