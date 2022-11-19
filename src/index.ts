@@ -1,4 +1,4 @@
-import express from 'express'
+import express, {Request, Response} from 'express'
 
 import {authRouter} from "./routers/auth-router";
 import {blogsRouter} from "./routers/blogs-router";
@@ -27,6 +27,10 @@ app.use('/posts', postsRouter)
 app.use('/security', securityRouter)
 app.use('/testing', testingRouter)
 app.use('/users', usersRouter)
+
+app.get('/', (req:Request, res: Response) => {
+    res.send('Hello World!')
+})
 
 const startApp = async () => {
     await runDb()
