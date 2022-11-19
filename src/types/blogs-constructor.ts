@@ -2,7 +2,8 @@ export class BlogConstructor {
     constructor(
         public id: string,
         public name: string,
-        public youtubeUrl: string,
+        public description: string,
+        public websiteUrl: string,
         public createdAt: string
     ) {}
 }

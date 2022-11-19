@@ -7,12 +7,13 @@ import {blogOutputType} from "../dataMapping/toBlogOutputData";
 export class BlogsService {
     constructor(protected blogsRepository: BlogsRepository) {}
 
-    async createNewBlog(name: string, youtubeUrl: string): Promise<BlogConstructor | null> {
+    async createNewBlog(name: string, description: string, websiteUrl: string): Promise<BlogConstructor | null> {
 
         const newBlog = new BlogConstructor(
             String(+new Date()),
             name,
-            youtubeUrl,
+            description,
+            websiteUrl,
             new Date().toISOString()
         )
 

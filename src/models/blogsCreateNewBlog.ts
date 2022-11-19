@@ -4,6 +4,7 @@ export class BlogsCreateNewBlog {
          * Create new blog with name and youtubeUrl
          */
         public name: string,
-        public youtubeUrl: string
+        public description: string,
+        public websiteUrl: string
     ) {}
 }

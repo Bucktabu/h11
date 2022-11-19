@@ -1,6 +1,8 @@
 import {authenticationGuard} from "./validation-middleware/authentication-guard";
-import {nameValidation,
-        youtubeUrlValidation} from "./validation-middleware/blogRouter-validation";
+import {
+        descriptionValidation, nameValidation,
+        websiteUrValidation
+} from "./validation-middleware/blogRouter-validation";
 import {contentValidation,
         shortDescriptionValidation,
         titleValidation} from "./validation-middleware/postRouter-validation";
@@ -15,5 +17,5 @@ export const createPostForBlogsRouterMiddleware = [authenticationGuard, titleVal
 export const deleteBlogsRouterMiddleware = [authenticationGuard]
 export const getBlogsRouterMiddleware = [sortByValidation, sortDirectionValidation, pageNumberValidation, pageSizeValidation, searchNameTermValidation, inputValidation]
 export const getPostForBlogsRouterMiddleware = [sortByValidation, sortDirectionValidation, pageNumberValidation, pageSizeValidation, inputValidation]
-export const postBlogsRouterMiddleware = [authenticationGuard, nameValidation, youtubeUrlValidation, inputValidation]
-export const putBlogsRouterMiddleware = [authenticationGuard, nameValidation, youtubeUrlValidation, inputValidation]
+export const postBlogsRouterMiddleware = [authenticationGuard, nameValidation, descriptionValidation, websiteUrValidation, inputValidation]
+export const putBlogsRouterMiddleware = [authenticationGuard, nameValidation, websiteUrValidation, inputValidation]
