@@ -27,11 +27,10 @@ export class TestingController {
             await this.emailConfirmationRepository.deleteAllEmailConfirmation()
             await this.ipAddressRepository.deleteAll()
             await this.jwtBlackList.deleteAll()
-            await this.likesRepository.deleteAll(),
+            await this.likesRepository.deleteAll()
             await this.postsRepository.deleteAllPosts()
             await this.securityRepository.deleteAll()
             await this.usersRepository.deleteAllUsers()
-
             return res.sendStatus(204)
         } catch (e) {
             console.log('testingRouter => all-data =>', e)

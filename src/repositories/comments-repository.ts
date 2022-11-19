@@ -19,7 +19,7 @@ export class CommentsRepository {
     }
 
     async giveCommentById(commentId: string): Promise<CommentBDConstructor | null> {
-        const comment = await CommentsSchema.findOne({id: commentId}, {projection: {_id: false, __v: false}})
+        const comment = await CommentsSchema.findOne({id: commentId}, {projection: {_id: false, postId: false, __v: false}})
 
         if (!comment) {
             return null
@@ -35,7 +35,7 @@ export class CommentsRepository {
                        postId: string): Promise<CommentsBDType> {
 
         return CommentsSchema
-            .find({postId: postId}, {_id: false, postId: false})
+            .find({postId}, {_id: false, postId: false, __v: false})
             .sort({[sortBy]: sortDirection === 'asc' ? 1 : -1})
             .skip(giveSkipNumber(pageNumber, pageSize))
             .limit(Number(pageSize))
