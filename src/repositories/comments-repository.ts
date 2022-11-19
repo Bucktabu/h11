@@ -32,7 +32,7 @@ export class CommentsRepository {
                        sortDirection: 'asc' | 'desc',
                        pageNumber: string,
                        pageSize: string,
-                       postId: string): Promise<CommentsBDType | null> {
+                       postId: string): Promise<CommentsBDType> {
 
         return CommentsSchema
             .find({postId: postId}, {_id: false, postId: false})

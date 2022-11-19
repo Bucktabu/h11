@@ -1,11 +1,9 @@
 import {LikesScheme} from "../schemes/likes-scheme";
 
 export class LikesRepository {
-    async giveUserReaction(commentId: string, userId: string) {
+    async giveUserReaction(parentId: string, userId: string) {
         try {
-            return LikesScheme.findOne(
-                {$and: [{parentId: commentId}, {userId}]},
-                {projection: {_id: false, parentId: false, userId: false, __v: false}})
+            return LikesScheme.findOne({parentId, userId}, {_id: false, parentId: false, userId: false, __v: false}).lean()
         } catch (e) {
             return null
         }
@@ -15,14 +13,23 @@ export class LikesRepository {
         return LikesScheme.countDocuments({$and: [{commentId}, {status}]})
     }
 
-    async updateUserReaction(commentId: string, userId: string, status: string): Promise<boolean> {
-        const result = await LikesScheme.updateOne({
-            $and: [{parentId: commentId}, {userId}]},
-            {$set: {status}},
-            {upsert: true}
-        )
+    async getLikeReactionsCount(parentId: string): Promise<number> {
+        return LikesScheme.countDocuments({parentId, status: 'Like'})
+    }
+    async getDislikeReactionsCount(parentId: string): Promise<number> {
+        return LikesScheme.countDocuments({parentId, status: 'Dislike'})
+    }
 
-        return result.matchedCount === 1
+    async updateUserReaction(commentId: string, userId: string, status: string): Promise<boolean> {
+        try{
+            await LikesScheme.updateOne({parentId: commentId, userId},
+                {$set: {status}},
+                {upsert: true}
+            )
+            return  true
+        } catch (e) {
+            return  false
+        }
     }
 
     async deleteAll(): Promise<boolean> {

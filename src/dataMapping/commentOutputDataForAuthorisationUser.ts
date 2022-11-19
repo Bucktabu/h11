@@ -2,15 +2,21 @@ import {likesRepository} from "../composition-root";
 import {CommentBDConstructor, CommentsViewModel} from "../types/comment-constructor";
 
 export const commentOutputDataForAuthorisationUser = async (comment: CommentBDConstructor, userId: string): Promise<CommentsViewModel> => {
-    const likesCount = await likesRepository.giveReactionsCount(comment.id, 'Like')
-    const dislikesCount = await likesRepository.giveReactionsCount(comment.id, 'Dislike')
-    let userReaction = await likesRepository.giveUserReaction(comment.id, userId) // TODO ??? Прошу вернуть одно поле, а возвращает весь объект
-    console.log(userReaction)
+    // const likesCount = await likesRepository.giveReactionsCount(comment.id, 'Like')
+    // const dislikesCount = await likesRepository.giveReactionsCount(comment.id, 'Dislike')
+    const likesCount = await likesRepository.getLikeReactionsCount(comment.id)
+    const dislikesCount = await likesRepository.getDislikeReactionsCount(comment.id)
 
     let reaction = 'None'
-    if (userReaction) {
-        reaction = userReaction!.status
+
+    if (userId) {
+        const result = await likesRepository.giveUserReaction(comment.id, userId)
+        if (result) reaction = result.status
     }
+
+
+
+
 
     return {
         id: comment.id,
