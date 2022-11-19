@@ -5,7 +5,7 @@ import {UserDBConstructor} from "../../types/user-constructor";
 
 export const checkCredential = async (req: Request, res: Response, next: NextFunction) => {
 
-    const user: UserDBConstructor | null = await usersRepository.giveUserByLoginOrEmail(req.body.login)
+    const user: UserDBConstructor | null = await usersRepository.giveUserByLoginOrEmail(req.body.loginOrEmail)
 
     if (!user) {
         return res.sendStatus(401)
