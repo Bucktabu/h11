@@ -1,5 +1,5 @@
 import {CommentsSchema} from "../schemes/comments-scheme";
-import {CommentBDConstructor, CommentsBDType, CommentsType} from "../types/comment-constructor";
+import {CommentBDConstructor, CommentsBDType} from "../types/comment-constructor";
 import {giveSkipNumber} from "../helperFunctions";
 
 export class CommentsRepository {
@@ -35,7 +35,7 @@ export class CommentsRepository {
                        postId: string): Promise<CommentsBDType | null> {
 
         return CommentsSchema
-            .find({postId: postId})
+            .find({postId: postId}, {_id: false, postId: false})
             .sort({[sortBy]: sortDirection === 'asc' ? 1 : -1})
             .skip(giveSkipNumber(pageNumber, pageSize))
             .limit(Number(pageSize))

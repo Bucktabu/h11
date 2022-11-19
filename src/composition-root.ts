@@ -3,11 +3,11 @@ import {CommentsRepository} from "./repositories/comments-repository";
 import {EmailConfirmationRepository} from "./repositories/emailConfirmation-repository";
 import {IpAddressRepository} from "./repositories/ipAddress-repository";
 import {JWTBlackList} from "./repositories/jwtBlackList";
-import {LikesInfoRepository} from "./repositories/likesInfo-repository";
+import {LikesRepository} from "./repositories/likes-repository";
 import {PostsRepository} from "./repositories/posts-repository";
 import {SecurityRepository} from "./repositories/security-repository";
-import {UserLikesRepository} from "./repositories/userLikes-repositiry";
 import {UsersRepository} from "./repositories/users-repository";
+import {JWTService} from "./application/jws-service";
 import {AuthService} from "./domain/auth-service";
 import {BlogsService} from "./domain/blogs-service";
 import {CommentsService} from "./domain/comments-servise";
@@ -21,17 +21,15 @@ import {CommentsController} from "./controllers/comments-controller";
 import {PostsController} from "./controllers/posts-controller";
 import {SecurityController} from "./controllers/security-controller";
 import {TestingController} from "./controllers/testing-controller";
-import {JWTService} from "./application/jws-service";
 
 export const blogsRepository = new BlogsRepository()
 const commentsRepository = new CommentsRepository()
 export const emailConfirmationRepository = new EmailConfirmationRepository()
-const ipAddressRepository = new IpAddressRepository()
+export const ipAddressRepository = new IpAddressRepository()
 const jwtBlackList = new JWTBlackList()
-export const likesInfoRepository = new LikesInfoRepository()
+export const likesRepository = new LikesRepository()
 const postsRepository = new PostsRepository()
 const securityRepository = new SecurityRepository()
-export const userLikesRepository = new UserLikesRepository()
 export const usersRepository = new UsersRepository()
 
 const authService = new AuthService(usersRepository)
@@ -40,8 +38,7 @@ export const jwtService = new JWTService(jwtBlackList)
 export const commentsService = new CommentsService(
     jwtService,
     commentsRepository,
-    likesInfoRepository,
-    userLikesRepository)
+    likesRepository)
 const postsService = new PostsService(postsRepository, blogsRepository)
 export const securityService = new SecurityService(
     jwtService,
@@ -63,10 +60,9 @@ export const testingController = new TestingController(
     emailConfirmationRepository,
     ipAddressRepository,
     jwtBlackList,
-    likesInfoRepository,
+    likesRepository,
     postsRepository,
     securityRepository,
-    userLikesRepository,
     usersRepository)
 export const userController = new UsersController(usersService)
 

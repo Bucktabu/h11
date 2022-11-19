@@ -1,15 +1,16 @@
-import {likesInfoRepository, userLikesRepository} from "../composition-root";
-import {CommentBDConstructor} from "../types/comment-constructor";
+import {likesRepository} from "../composition-root";
+import {CommentBDConstructor, CommentsViewModel} from "../types/comment-constructor";
 
-export const commentOutputDataForAuthorisationUser = async (comment: CommentBDConstructor, userId: string): Promise<CommentBDConstructor> => {
-    const userReaction = await userLikesRepository.giveUserLike(userId, comment.id)
-    console.log('---> likeStatus from bd : ' + userReaction?.likeStatus)
+export const commentOutputDataForAuthorisationUser = async (comment: CommentBDConstructor, userId: string): Promise<CommentsViewModel> => {
+    const likesCount = await likesRepository.giveReactionsCount(comment.id, 'Like')
+    const dislikesCount = await likesRepository.giveReactionsCount(comment.id, 'Dislike')
+    let userReaction = await likesRepository.giveUserReaction(comment.id, userId) // TODO ??? Прошу вернуть одно поле, а возвращает весь объект
+    console.log(userReaction)
+
     let reaction = 'None'
     if (userReaction) {
-        reaction = userReaction.likeStatus
+        reaction = userReaction!.status
     }
-
-    const likeInfo = await likesInfoRepository.giveLikeInfo(comment.id)
 
     return {
         id: comment.id,
@@ -19,8 +20,8 @@ export const commentOutputDataForAuthorisationUser = async (comment: CommentBDCo
         createdAt: comment.createdAt,
         likesInfo: {
             myStatus: reaction,
-            likesCount: likeInfo!.likesCount,
-            dislikesCount: likeInfo!.dislikesCount
+            likesCount: likesCount!,
+            dislikesCount: dislikesCount!
         }
     }
 }

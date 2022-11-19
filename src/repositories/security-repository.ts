@@ -10,13 +10,13 @@ export class SecurityRepository {
         }
     }
 
-    async giveLastSeveralSessions(ipAddress: string, sessionsСount: number) {
-        return SecurityScheme
-            .find({'userDevice.ipAddress': ipAddress})
-            .sort({['userDevice.iat']: 'desc'})
-            .limit(sessionsСount)
-            .lean()
-    }
+    // async giveLastSeveralSessions(ipAddress: string, sessionsСount: number) {
+    //     return SecurityScheme
+    //         .find({'userDevice.ipAddress': ipAddress})
+    //         .sort({['userDevice.iat']: 'desc'})
+    //         .limit(sessionsСount)
+    //         .lean()
+    // }
 
     async giveAllActiveSessions(userId: string) {
         return SecurityScheme

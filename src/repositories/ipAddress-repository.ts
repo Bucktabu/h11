@@ -19,5 +19,3 @@ export class IpAddressRepository {
         }
     }
 }
-
-export const ipAddressRepository = new IpAddressRepository()
